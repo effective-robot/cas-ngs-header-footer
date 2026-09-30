@@ -1,0 +1,106 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/act1-hero-sequencer",
+  "version": "1.3.0",
+  "title": "Act 1: Hero Sequencer Terminal",
+  "category": "cas-ngs-biotech",
+  "icon": "analytics",
+  "description": "Oxford Nanopore PromethION live sequencer schematic, ionic current waveform simulator, live run timer, and 4 metric counter cards.",
+  "keywords": [
+    "biotech",
+    "sequencer",
+    "hero",
+    "nanopore",
+    "promethion"
+  ],
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "badge_text": {
+      "type": "string",
+      "default": "Powered by Oxford Nanopore Technology"
+    },
+    "headline": {
+      "type": "string",
+      "default": "Unlocking Genomic Insights at the Speed of Life."
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Practical long-read DNA sequencing, research-grade bioinformatics, and capacity-building solutions powered by Oxford Nanopore Technology."
+    },
+    "primary_cta_text": {
+      "type": "string",
+      "default": "Request Run Quote"
+    },
+    "primary_cta_url": {
+      "type": "string",
+      "default": "/request-a-quote/"
+    },
+    "secondary_cta_text": {
+      "type": "string",
+      "default": "Explore Services"
+    },
+    "secondary_cta_url": {
+      "type": "string",
+      "default": "/services/"
+    },
+    "metric_1_val": {
+      "type": "string",
+      "default": "120 Gb+"
+    },
+    "metric_1_label": {
+      "type": "string",
+      "default": "Throughput / Flowcell"
+    },
+    "metric_2_val": {
+      "type": "string",
+      "default": "99.9%"
+    },
+    "metric_2_label": {
+      "type": "string",
+      "default": "Consensus Accuracy (Q20+)"
+    },
+    "metric_3_val": {
+      "type": "string",
+      "default": "4.2 Mb"
+    },
+    "metric_3_label": {
+      "type": "string",
+      "default": "Record Read Length"
+    },
+    "metric_4_val": {
+      "type": "string",
+      "default": "48 hrs"
+    },
+    "metric_4_label": {
+      "type": "string",
+      "default": "Basecall Turnaround"
+    },
+    "live_status_text": {
+      "type": "string",
+      "default": "LIVE RUNNING • PROMETHION 24"
+    },
+    "flowcell_qc_text": {
+      "type": "string",
+      "default": "Q20+ ACTIVE"
+    },
+    "voltage_text": {
+      "type": "string",
+      "default": "MEMBRANE VOLTAGE: -180 mV"
+    },
+    "translocation_text": {
+      "type": "string",
+      "default": "400 BPS TRANSLOCATION"
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "style": "cas-ngs-biotech-blocks-css",
+  "render": "file:./render.php",
+  "editorScript": "cas-ngs-biotech-blocks-editor"
+}

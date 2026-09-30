@@ -1,0 +1,146 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/act2-bento-grid",
+  "version": "1.3.0",
+  "title": "Act 2: Bento Services Grid",
+  "category": "cas-ngs-biotech",
+  "icon": "grid-view",
+  "description": "Hardware sequencing flow cell schematic SVG, GPU Bioinformatics live terminal with read-length distribution histogram simulator, and full-width Hands-On Wet Lab Training section.",
+  "keywords": [
+    "biotech",
+    "bento",
+    "grid",
+    "services",
+    "bioinformatics"
+  ],
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "badge_text": {
+      "type": "string",
+      "default": "Comprehensive Genomics Ecosystem"
+    },
+    "section_title": {
+      "type": "string",
+      "default": "Precision Long-Read Sequencing & Advanced Compute"
+    },
+    "section_desc": {
+      "type": "string",
+      "default": "Engineered for researchers and institutions requiring ultra-high molecular weight DNA resolution, direct epigenetic modifications, and GPU-accelerated basecalling pipelines."
+    },
+    "card1_tag": {
+      "type": "string",
+      "default": "Oxford Nanopore Platform"
+    },
+    "card1_title": {
+      "type": "string",
+      "default": "Long-Read DNA & RNA Sequencing"
+    },
+    "card1_desc": {
+      "type": "string",
+      "default": "Direct single-molecule sequencing of ultra-long native DNA and native RNA strands. Zero PCR amplification bias, real-time base modification calling, and phased telomere-to-telomere genomic assemblies."
+    },
+    "card1_spec_label": {
+      "type": "string",
+      "default": "N50 > 50,000 BP TARGET"
+    },
+    "card1_cta_text": {
+      "type": "string",
+      "default": "Explore Sequencing →"
+    },
+    "card1_cta_url": {
+      "type": "string",
+      "default": "/services/#sequencing"
+    },
+    "card2_tag": {
+      "type": "string",
+      "default": "GPU Compute Pipeline"
+    },
+    "card2_title": {
+      "type": "string",
+      "default": "Custom Bioinformatics Pipelines"
+    },
+    "card2_desc": {
+      "type": "string",
+      "default": "End-to-end computational genomics run on dedicated NVIDIA GPU clusters. From Dorado Super-Accuracy basecalling to Sniffles2 structural variant discovery, phased diploid assemblies, and methylome profiling."
+    },
+    "card2_spec_label": {
+      "type": "string",
+      "default": "NVIDIA RTX 4090 CLUSTERS"
+    },
+    "card2_cta_text": {
+      "type": "string",
+      "default": "View Pipelines →"
+    },
+    "card2_cta_url": {
+      "type": "string",
+      "default": "/bioinformatics/"
+    },
+    "card2_terminal_title": {
+      "type": "string",
+      "default": "dorado_live_gpu_pipeline.sh"
+    },
+    "card2_histogram_label": {
+      "type": "string",
+      "default": "READ LENGTH DISTRIBUTION (N50: 42.8 KB)"
+    },
+    "card3_tag": {
+      "type": "string",
+      "default": "Institutional Enablement • RESIDENCY PROGRAM"
+    },
+    "card3_title": {
+      "type": "string",
+      "default": "Hands-On Capacity Building & Laboratory Training"
+    },
+    "card3_desc": {
+      "type": "string",
+      "default": "Democratizing genomic knowledge by training the next generation of sequencing scientists. We partner with universities, government labs, and medical centers to stand up self-sufficient long-read genomics hubs."
+    },
+    "card3_spec_label": {
+      "type": "string",
+      "default": "ACADEMIC & GOVERNMENT COHORTS"
+    },
+    "card3_cta_text": {
+      "type": "string",
+      "default": "View Training Modules →"
+    },
+    "card3_cta_url": {
+      "type": "string",
+      "default": "/capacity-building/"
+    },
+    "training_1_title": {
+      "type": "string",
+      "default": "Wet Lab Masterclasses"
+    },
+    "training_1_desc": {
+      "type": "string",
+      "default": "HMW DNA extraction, barcoding protocols, and flowcell priming diagnostics."
+    },
+    "training_2_title": {
+      "type": "string",
+      "default": "University Lab Training"
+    },
+    "training_2_desc": {
+      "type": "string",
+      "default": "Turnkey MinION starter deployments and standardized wet-lab curriculum."
+    },
+    "training_3_title": {
+      "type": "string",
+      "default": "Student Internships"
+    },
+    "training_3_desc": {
+      "type": "string",
+      "default": "Immersive 12-week genomic data analysis residencies with certified competency."
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "style": "cas-ngs-biotech-blocks-css",
+  "render": "file:./render.php",
+  "editorScript": "cas-ngs-biotech-blocks-editor"
+}

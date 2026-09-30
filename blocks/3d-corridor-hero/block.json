@@ -1,0 +1,116 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/corridor-hero-3d",
+  "version": "1.7.0",
+  "title": "3D Corridor Hero: Sample to Code",
+  "category": "cas-ngs-biotech",
+  "icon": "analytics",
+  "description": "Full-bleed 4-station 3D sequencing corridor: GLB double helix, ribbon chromatograms, basecall stream and variant matrix, with single-flick snap scrolling and fully editable station copy.",
+  "keywords": [
+    "biotech",
+    "3d",
+    "corridor",
+    "dna",
+    "sequencing",
+    "hero",
+    "webgl"
+  ],
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "station1_kicker": {
+      "type": "string",
+      "default": "STEP 01 // SPECIMEN PREPARATION"
+    },
+    "station1_title": {
+      "type": "string",
+      "default": "Sample Extraction"
+    },
+    "station1_desc": {
+      "type": "string",
+      "default": "High-molecular-weight genomic DNA isolated from biological specimens and stabilized in high-purity suspension for deep sequencing."
+    },
+    "station1_badge": {
+      "type": "string",
+      "default": "CS-0427 | HMW DNA | QC PASS"
+    },
+    "station2_kicker": {
+      "type": "string",
+      "default": "STEP 02 // SIGNAL FLUIDICS"
+    },
+    "station2_title": {
+      "type": "string",
+      "default": "Fluorescence Basecalling"
+    },
+    "station2_desc": {
+      "type": "string",
+      "default": "Real-time optical channels capture four-color fluorophore emissions across high-density flowcell channels."
+    },
+    "station2_badge": {
+      "type": "string",
+      "default": "FLOWCELL 04 | 2x150 BP | LIVE"
+    },
+    "station3_kicker": {
+      "type": "string",
+      "default": "STEP 03 // SEQUENCE ALIGNMENT"
+    },
+    "station3_title": {
+      "type": "string",
+      "default": "Digital Reads Processing"
+    },
+    "station3_desc": {
+      "type": "string",
+      "default": "Parallel basecall streams mapped against reference genomes with quality score filtering and error correction."
+    },
+    "station3_badge": {
+      "type": "string",
+      "default": "Q30 93.1% | 2.4B READS"
+    },
+    "station4_kicker": {
+      "type": "string",
+      "default": "STEP 04 // MUTATIONAL ANALYSIS"
+    },
+    "station4_title": {
+      "type": "string",
+      "default": "Variant Matrix Mapping"
+    },
+    "station4_desc": {
+      "type": "string",
+      "default": "Comprehensive identification of single nucleotide variants, insertions, and structural genomic alterations."
+    },
+    "station4_badge": {
+      "type": "string",
+      "default": "GRCh38 | 4,182 VARIANTS | READY"
+    },
+    "palette": {
+      "type": "string",
+      "default": "bronze"
+    },
+    "model_url": {
+      "type": "string",
+      "default": ""
+    },
+    "enable_cursor_trail": {
+      "type": "boolean",
+      "default": true
+    },
+    "dna_tint_color": {
+      "type": "string",
+      "default": ""
+    },
+    "bar_darken": {
+      "type": "number",
+      "default": 0.15
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "style": "cas-ngs-corridor-hero-css",
+  "render": "file:./render.php",
+  "editorScript": "cas-ngs-corridor-hero-editor"
+}

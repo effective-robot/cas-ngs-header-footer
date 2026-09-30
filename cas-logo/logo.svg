@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 460 410" width="100%" height="100%">
+  <style>
+    .node, .bond {
+      fill: #000000;
+      stroke: #000000;
+    }
+    .bond {
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+  </style>
+  <g id="dna-mark-static" transform="translate(-90, -90)">
+    <!-- Rung 1 -->
+    <line class="bond" x1="100" y1="100" x2="100" y2="400" />
+    <circle class="node" cx="100" cy="100" r="30" />
+    <circle class="node" cx="100" cy="400" r="18" />
+
+    <!-- Rung 2 -->
+    <line class="bond" x1="160" y1="215" x2="160" y2="285" />
+    <circle class="node" cx="160" cy="215" r="28" />
+    <circle class="node" cx="160" cy="285" r="18" />
+
+    <!-- Rung 3 -->
+    <line class="bond" x1="220" y1="165" x2="220" y2="335" />
+    <circle class="node" cx="220" cy="165" r="18" />
+    <circle class="node" cx="220" cy="335" r="28" />
+
+    <!-- Rung 4 (Center peak) -->
+    <line class="bond" x1="280" y1="110" x2="280" y2="410" />
+    <circle class="node" cx="280" cy="110" r="18" />
+    <circle class="node" cx="280" cy="410" r="28" />
+
+    <!-- Rung 5 -->
+    <line class="bond" x1="340" y1="165" x2="340" y2="335" />
+    <circle class="node" cx="340" cy="165" r="18" />
+    <circle class="node" cx="340" cy="335" r="28" />
+
+    <!-- Rung 6 -->
+    <line class="bond" x1="400" y1="215" x2="400" y2="285" />
+    <circle class="node" cx="400" cy="215" r="28" />
+    <circle class="node" cx="400" cy="285" r="18" />
+
+    <!-- Rung 7 -->
+    <line class="bond" x1="460" y1="100" x2="460" y2="400" />
+    <circle class="node" cx="460" cy="100" r="30" />
+    <circle class="node" cx="460" cy="400" r="18" />
+  </g>
+</svg>

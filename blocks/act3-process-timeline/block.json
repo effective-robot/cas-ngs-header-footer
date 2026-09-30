@@ -1,0 +1,106 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/act3-process-timeline",
+  "version": "1.3.0",
+  "title": "Act 3: Process Timeline",
+  "category": "cas-ngs-biotech",
+  "icon": "backup",
+  "description": "4-stage biotech sequencing pipeline (Sample Prep → Nanopore Basecalling → Computational Analysis → Research Insight) with QC badges.",
+  "keywords": [
+    "biotech",
+    "timeline",
+    "pipeline",
+    "workflow",
+    "process"
+  ],
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "badge_text": {
+      "type": "string",
+      "default": "Rigorous Pipeline"
+    },
+    "section_title": {
+      "type": "string",
+      "default": "From Biological Sample to Scientific Insight"
+    },
+    "section_desc": {
+      "type": "string",
+      "default": "A seamless four-stage trajectory engineered to deliver maximum data integrity, zero amplification artifact, and actionable results."
+    },
+    "phase1_label": {
+      "type": "string",
+      "default": "PHASE 01"
+    },
+    "phase1_title": {
+      "type": "string",
+      "default": "Sample Prep"
+    },
+    "phase1_desc": {
+      "type": "string",
+      "default": "HMW DNA/RNA extraction with strict fragment length selection (>50 kb). Fluorometric Qubit QC and agarose gel integrity verification."
+    },
+    "phase1_qc": {
+      "type": "string",
+      "default": "DIN/RIN QC Verified"
+    },
+    "phase2_label": {
+      "type": "string",
+      "default": "PHASE 02"
+    },
+    "phase2_title": {
+      "type": "string",
+      "default": "Nanopore Basecalling"
+    },
+    "phase2_desc": {
+      "type": "string",
+      "default": "Single-molecule translocation through synthetic protein pores at 400 bp/s. Direct electronic voltage sampling at 4,000 measurements/sec per channel."
+    },
+    "phase2_qc": {
+      "type": "string",
+      "default": "Real-Time Ionic Readout"
+    },
+    "phase3_label": {
+      "type": "string",
+      "default": "PHASE 03"
+    },
+    "phase3_title": {
+      "type": "string",
+      "default": "Computational Analysis"
+    },
+    "phase3_desc": {
+      "type": "string",
+      "default": "Raw ionic current squiggles translated via Dorado SUP neural models. Structural variant calling (Sniffles2), chromosomal phasing, and methylation profiling."
+    },
+    "phase3_qc": {
+      "type": "string",
+      "default": "Q20+ Consensus Output"
+    },
+    "phase4_label": {
+      "type": "string",
+      "default": "PHASE 04"
+    },
+    "phase4_title": {
+      "type": "string",
+      "default": "Research Insight"
+    },
+    "phase4_desc": {
+      "type": "string",
+      "default": "Publication-ready methylation heatmaps, de novo assembly graphs, chromosomal phasing, and full raw POD5 / FASTQ + BAM + VCF delivery packages."
+    },
+    "phase4_qc": {
+      "type": "string",
+      "default": "VCF, BAM & FASTQ"
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "style": "cas-ngs-biotech-blocks-css",
+  "render": "file:./render.php",
+  "editorScript": "cas-ngs-biotech-blocks-editor"
+}

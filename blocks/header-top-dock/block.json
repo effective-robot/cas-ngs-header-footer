@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/header-top-dock",
+  "version": "1.3.1",
+  "title": "Act 0: Animated Top Dock Header",
+  "category": "cas-ngs-biotech",
+  "icon": "menu-alt3",
+  "description": "ThreeUI Animated Command Bar Dock with spring-damping physics magnification, micro chevron indicators, and glassmorphic physics dropdown panels.",
+  "keywords": [
+    "header",
+    "dock",
+    "navigation",
+    "physics",
+    "dropdown"
+  ],
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "brand_name": {
+      "type": "string",
+      "default": "CAS-NGS"
+    },
+    "brand_url": {
+      "type": "string",
+      "default": "/"
+    },
+    "cta_text": {
+      "type": "string",
+      "default": "Request Quote"
+    },
+    "cta_url": {
+      "type": "string",
+      "default": "/request-a-quote/"
+    },
+    "signin_text": {
+      "type": "string",
+      "default": "Sign in"
+    },
+    "signin_url": {
+      "type": "string",
+      "default": "/login/"
+    },
+    "enable_physics": {
+      "type": "boolean",
+      "default": true
+    },
+    "enable_aurora": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false,
+    "inserter": false
+  },
+  "style": "cas-ngs-biotech-blocks-css",
+  "editorScript": "cas-ngs-biotech-blocks-editor",
+  "render": "file:./render.php"
+}

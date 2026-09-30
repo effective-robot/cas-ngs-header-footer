@@ -1,0 +1,480 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ==========================================================================
+   CAS-NGS 3D CORRIDOR HERO (cas-ngs/3d-corridor-hero) — scoped styles
+   --------------------------------------------------------------------------
+   Every selector is namespaced cor3d-* / #corridor-canvas-container — zero
+   collisions with the existing biotech blocks. Appended to the plugin's
+   asset pipeline as its own handle (cas-ngs-corridor-hero-css); to fold it
+   into the main bundle instead:
+     cat assets/css/corridor-hero.css >> assets/css/biotech-blocks.css
+   ========================================================================== */
+
+/* ── full-viewport takeover: 100vw × 100vh, zero seams ────────────────────
+   The hero breaks out of any theme content-width container and pins the
+   viewport for 4 × 100vh of scroll. Margins/paddings are forced to zero
+   on the block wrapper so Frame 4 releases into the next section with
+   no white space, and the document clips horizontal overflow while a
+   corridor is mounted (100vw includes the scrollbar gutter). */
+html.cor3d-active { overflow-x: clip; }
+
+.wp-block-cas-ngs-corridor-hero-3d {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+/* kill any theme-imposed top margin on whatever follows the hero */
+.wp-block-cas-ngs-corridor-hero-3d + * { margin-top: 0 !important; }
+
+#corridor-canvas-container.cor3d-wrap {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  height: 400vh;
+  height: 400svh;
+  padding: 0;
+  border: 0;
+}
+
+/* The stage is position:fixed so it pins to the viewport regardless of any
+   theme ancestor overflow/containment (which silently breaks position:sticky
+   and was making the whole block scroll away as one lump). The engine drives
+   its vertical offset: fly-in from below on entry, pinned through the four
+   frames, and fly-out upward into the next section. */
+#corridor-canvas-container .cor3d-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--cor3d-bg, #f8f6f0);
+  isolation: isolate;
+  will-change: transform, opacity;
+  z-index: 10;
+  /* default: parked below the viewport, so a below-the-fold corridor does not
+     cover the page before the engine positions the stage; the engine takes
+     over this transform as soon as the corridor scrolls into range */
+  transform: translate3d(0, 100%, 0);
+}
+
+#corridor-canvas-container .cor3d-stage canvas.gl {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+/* A·T·C·G cursor-trail overlay (sits under the HUD cards) */
+#corridor-canvas-container .cor3d-glyph-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+#corridor-canvas-container .cor3d-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#corridor-canvas-container .cor3d-fail {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  padding: 0 24px;
+  text-align: center;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--cor3d-muted, #6b5d51);
+}
+
+/* ── station cards ──────────────────────────────────────────────────────── */
+#corridor-canvas-container .cor3d-anchor {
+  position: absolute;
+  top: 50%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: auto;
+  will-change: opacity, transform, translate;
+  /* compose with the JS station transform (individual properties) */
+  transition: translate 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* station anchors: Fig.01 left · Fig.02 right · Fig.03 bottom-center · Fig.04 right */
+#corridor-canvas-container .cor3d-anchor.cor3d-pos-left { left: 8%; }
+#corridor-canvas-container .cor3d-anchor.cor3d-pos-right { left: auto; right: 8%; }
+#corridor-canvas-container .cor3d-anchor.cor3d-pos-center {
+  left: 50%;
+  top: auto;
+  bottom: 12vh;
+}
+
+/* hover elevation: the whole wrapper (border + glass) lifts as one unit */
+#corridor-canvas-container .cor3d-anchor:hover { translate: 0 -6px; }
+
+#corridor-canvas-container .cor3d-card {
+  width: min(432px, 84vw);
+  margin: 0;
+  padding: 26px 30px 24px;
+  background: var(--cor3d-card, rgba(235, 225, 210, 0.65));
+  border: 1px solid var(--cor3d-border, rgba(134, 84, 56, 0.22));
+  border-left: 2px solid var(--cor3d-accent, #865438);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 18px 44px -22px color-mix(in srgb, var(--cor3d-ink, #2b2522) 42%, transparent);
+  perspective: 900px;
+  will-change: transform, scale;
+  transition: scale 0.45s ease, box-shadow 0.45s ease, border-color 0.35s ease,
+              background-color 0.8s ease;
+}
+
+/* ambient float: ±8px / ±1° over a 4s sine cycle, on the individual
+   translate/rotate properties so it never fights the station morph */
+#corridor-canvas-container .cor3d-card.is-floating {
+  animation: cor3d-card-float 4s ease-in-out infinite;
+}
+#corridor-canvas-container .cor3d-anchor:hover .cor3d-card {
+  animation-play-state: paused;
+  scale: 1.02;
+  border-color: color-mix(in srgb, var(--cor3d-accent, #865438) 50%, transparent);
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--cor3d-ink, #2b2522) 15%, transparent);
+}
+
+@keyframes cor3d-card-float {
+  0%, 100% { translate: 0 -8px; rotate: -1deg; }
+  50%      { translate: 0 8px;  rotate: 1deg; }
+}
+
+/* inner plate carries the zero-g cursor tilt (GSAP quickTo) */
+#corridor-canvas-container .cor3d-card-inner {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* card typography — uniform Slate Earth headings, no italic fragments */
+#corridor-canvas-container .cor3d-fig {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cor3d-accent, #865438);
+}
+#corridor-canvas-container .cor3d-fig strong { font-weight: 700; }
+#corridor-canvas-container .cor3d-fig-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--cor3d-border, rgba(134, 84, 56, 0.25));
+}
+#corridor-canvas-container .cor3d-fig-phase { color: var(--cor3d-faint, #8f8172); }
+
+/* Typography matches the act1-act4 block theme: Plus Jakarta Sans display
+   (via the same --cas-bio-font-display variable they use) + system body. */
+#corridor-canvas-container .cor3d-title {
+  margin: 0 0 13px;
+  font-family: var(--cas-bio-font-display, 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: clamp(27px, 3vw, 40px);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--cor3d-ink, #362115);
+}
+
+#corridor-canvas-container .cor3d-copy {
+  margin: 0 0 18px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--cor3d-muted, #5a4d41);
+}
+
+#corridor-canvas-container .cor3d-badge {
+  display: inline-block;
+  margin: 0;
+  padding: 6px 10px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor3d-accent, #865438);
+  border: 1px solid var(--cor3d-border, rgba(134, 84, 56, 0.25));
+  background: color-mix(in srgb, var(--cor3d-accent, #865438) 7%, transparent);
+}
+
+/* ── station dots (right edge, inside the stage) ────────────────────────── */
+#corridor-canvas-container .cor3d-rail {
+  position: absolute;
+  right: clamp(18px, 3vw, 44px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+#corridor-canvas-container .cor3d-rail-label {
+  writing-mode: vertical-rl;
+  margin-bottom: 14px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cor3d-accent, #865438);
+}
+#corridor-canvas-container .cor3d-dots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0;
+}
+#corridor-canvas-container .cor3d-dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+#corridor-canvas-container .cor3d-dot::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--cor3d-faint, #8f8172);
+  background: transparent;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s, border-color 0.35s, box-shadow 0.35s;
+}
+#corridor-canvas-container .cor3d-dot:hover::before {
+  border-color: var(--cor3d-accent, #865438);
+  transform: scale(1.3);
+}
+#corridor-canvas-container .cor3d-dot.active::before {
+  background: var(--cor3d-accent, #865438);
+  border-color: var(--cor3d-accent, #865438);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cor3d-accent, #865438) 22%, transparent);
+}
+#corridor-canvas-container .cor3d-dot span {
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  padding: 5px 9px;
+  white-space: nowrap;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cor3d-ink, #2b2522);
+  background: var(--cor3d-card, rgba(248, 246, 240, 0.85));
+  border: 1px solid var(--cor3d-border, rgba(134, 84, 56, 0.25));
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#corridor-canvas-container .cor3d-dot:hover span,
+#corridor-canvas-container .cor3d-dot:focus-visible span {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+#corridor-canvas-container .cor3d-rail-pct {
+  margin-top: 14px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--cor3d-muted, #6b5d51);
+}
+
+/* ── status · cue · ticker ──────────────────────────────────────────────── */
+#corridor-canvas-container .cor3d-status {
+  position: absolute;
+  right: clamp(18px, 3vw, 44px);
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--cor3d-faint, #8f8172);
+}
+#corridor-canvas-container .cor3d-pulse {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--cor3d-accent, #865438);
+  animation: cor3d-pulse 2.6s ease-in-out infinite;
+}
+@keyframes cor3d-pulse {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 0.3; }
+}
+#corridor-canvas-container .cor3d-status-phase { color: var(--cor3d-muted, #6b5d51); }
+
+#corridor-canvas-container .cor3d-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 76px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--cor3d-muted, #6b5d51);
+}
+#corridor-canvas-container .cor3d-cue-line {
+  position: relative;
+  overflow: hidden;
+  width: 1px;
+  height: 42px;
+  background: color-mix(in srgb, var(--cor3d-faint, #8f8172) 30%, transparent);
+}
+#corridor-canvas-container .cor3d-cue-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(180deg, transparent, var(--cor3d-accent, #865438));
+  animation: cor3d-cue-drop 2.1s cubic-bezier(0.6, 0.1, 0.3, 0.9) infinite;
+}
+@keyframes cor3d-cue-drop {
+  0%        { top: -40%; }
+  70%, 100% { top: 110%; }
+}
+
+#corridor-canvas-container .cor3d-ticker {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: min(680px, 56vw);
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--cor3d-accent, #865438);
+}
+#corridor-canvas-container .cor3d-tk-prefix {
+  margin-right: 12px;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cor3d-faint, #8f8172);
+}
+#corridor-canvas-container .cor3d-tk-caret {
+  display: inline-block;
+  width: 6px;
+  margin-left: 3px;
+  background: var(--cor3d-accent, #865438);
+  animation: cor3d-blink 1.1s steps(2) infinite;
+}
+@keyframes cor3d-blink { 50% { opacity: 0; } }
+
+/* ── responsive: every plate docks bottom-left on narrow screens ────────── */
+@media (max-width: 960px) {
+  #corridor-canvas-container .cor3d-anchor.cor3d-pos-left,
+  #corridor-canvas-container .cor3d-anchor.cor3d-pos-right,
+  #corridor-canvas-container .cor3d-anchor.cor3d-pos-center {
+    left: 20px;
+    right: auto;
+    top: auto;
+    bottom: 7vh;
+  }
+  #corridor-canvas-container .cor3d-ticker { display: none; }
+  #corridor-canvas-container .cor3d-rail { right: 12px; }
+  #corridor-canvas-container .cor3d-rail-label,
+  #corridor-canvas-container .cor3d-rail-pct { display: none; }
+  #corridor-canvas-container .cor3d-card { width: min(400px, 84vw); }
+}
+@media (max-width: 560px) {
+  #corridor-canvas-container .cor3d-status { display: none; }
+  #corridor-canvas-container .cor3d-card { padding: 22px 22px 20px; }
+}
+
+/* ── reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #corridor-canvas-container .cor3d-card.is-floating { animation: none; }
+  #corridor-canvas-container .cor3d-cue-line::after,
+  #corridor-canvas-container .cor3d-pulse,
+  #corridor-canvas-container .cor3d-tk-caret { animation: none; }
+}
+
+/* ── block editor preview: flatten the pin into a static panel ──────────── */
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-wrap,
+.editor-styles-wrapper .cor3d-wrap {
+  width: 100%;
+  height: auto;
+  margin-left: 0;
+  margin-right: 0;
+}
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-stage,
+.editor-styles-wrapper .cor3d-stage {
+  position: relative;
+  top: auto;
+  height: 62vh;
+  min-height: 480px;
+}
+.block-editor-block-list__block .cor3d-editor-preview canvas.gl,
+.editor-styles-wrapper .cor3d-stage canvas.gl { display: none; }
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-stage::before,
+.editor-styles-wrapper .cor3d-stage::before {
+  content: '3D CORRIDOR HERO — live WebGL preview renders on the front end. Cards, kickers and badges are fully editable in the sidebar.';
+  position: absolute;
+  inset: auto 0 0 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--cor3d-muted, #6b5d51);
+  background:
+    radial-gradient(60% 55% at 62% 42%, color-mix(in srgb, var(--cor3d-accent, #865438) 10%, transparent), transparent 70%),
+    var(--cor3d-bg, #f8f6f0);
+}
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-anchor,
+.editor-styles-wrapper .cor3d-anchor {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-anchor.cor3d-pos-center,
+.editor-styles-wrapper .cor3d-anchor.cor3d-pos-center { bottom: 4vh; }
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-card,
+.editor-styles-wrapper .cor3d-card { animation: none !important; }
+.block-editor-block-list__block .cor3d-editor-preview .cor3d-cue,
+.editor-styles-wrapper .cor3d-cue { display: none; }

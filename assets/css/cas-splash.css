@@ -1,0 +1,82 @@
+@font-face {
+  font-family: 'Lastica';
+  src: url('../../cas-logo/FontsFree-Net-Lastica.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html.cas-splash-active,
+html.cas-splash-active body {
+  margin: 0;
+  overflow: hidden;
+}
+
+html.cas-splash-active body > *:not(#cas-splash) {
+  visibility: hidden !important;
+}
+
+body.cas-splash-complete > *:not(#cas-splash) {
+  visibility: visible !important;
+}
+
+#cas-splash {
+  --cas-splash-bg: #0F1314;
+  --cas-splash-node: #F4A950;
+  --cas-splash-bond: #F4A950;
+  --cas-splash-text: #F4A950;
+
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--cas-splash-bg);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s ease, visibility 0.8s ease, transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+body.cas-splash-complete #cas-splash {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-120%);
+}
+
+.cas-splash-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#cas-splash svg {
+  width: 950px;
+  height: 450px;
+  overflow: visible;
+}
+
+#cas-splash .node {
+  fill: var(--cas-splash-node);
+  stroke: var(--cas-splash-node);
+}
+
+#cas-splash .bond {
+  fill: var(--cas-splash-bond);
+  stroke: var(--cas-splash-bond);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+#cas-splash .company-text {
+  font-family: 'Lastica', sans-serif;
+  font-size: 65px;
+  font-weight: 400;
+  fill: var(--cas-splash-text);
+  letter-spacing: 4px;
+  dominant-baseline: central;
+}
+
+#cas-splash #dna-mark {
+  opacity: 0;
+}

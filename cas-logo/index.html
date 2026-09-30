@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAS-NGS Animated Logo</title>
+  <style>
+    /* -------------------------------------------------------------
+       1. CUSTOM FONT DECLARATION
+       ------------------------------------------------------------- */
+    @font-face {
+      font-family: 'Lastica';
+      src: url('FontsFree-Net-Lastica.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* -------------------------------------------------------------
+       2. COLOR VARIABLES
+       ------------------------------------------------------------- */
+    :root {
+      --bg-color: #0F1314;      /* Page Background Color */
+      --node-color: #F4A950;    /* DNA Circle/Node Color */
+      --bond-color: #F4A950;    /* DNA Connecting Line/Bond Color */
+      --text-color: #F4A950;    /* Brand Text Color */
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 950px;
+      height: 450px;
+      overflow: visible;
+    }
+
+    .node {
+      fill: var(--node-color);
+      stroke: var(--node-color);
+    }
+
+    .bond {
+      fill: var(--bond-color);
+      stroke: var(--bond-color);
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .company-text {
+      font-family: 'Lastica', sans-serif;
+      font-size: 65px;
+      font-weight: 400;
+      fill: var(--text-color);
+      letter-spacing: 4px;
+      dominant-baseline: central;
+    }
+
+    #dna-mark {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+<svg viewBox="0 0 1100 500">
+  <defs>
+    <!-- Mask aligned right after the scaled down logo -->
+    <clipPath id="text-reveal-clip">
+      <rect id="clip-rect" x="445" y="0" width="0" height="500" />
+    </clipPath>
+  </defs>
+
+  <!-- DNA Mark Group -->
+  <g id="dna-mark">
+    <!-- Rung 1 -->
+    <line class="bond" id="b0" x1="100" y1="250" x2="100" y2="250" />
+    <circle class="node" id="n0-top" cx="100" cy="250" r="30" />
+    <circle class="node" id="n0-bot" cx="100" cy="250" r="18" />
+
+    <!-- Rung 2 -->
+    <line class="bond" id="b1" x1="160" y1="250" x2="160" y2="250" />
+    <circle class="node" id="n1-top" cx="160" cy="250" r="28" />
+    <circle class="node" id="n1-bot" cx="160" cy="250" r="18" />
+
+    <!-- Rung 3 -->
+    <line class="bond" id="b2" x1="220" y1="250" x2="220" y2="250" />
+    <circle class="node" id="n2-top" cx="220" cy="250" r="18" />
+    <circle class="node" id="n2-bot" cx="220" cy="250" r="28" />
+
+    <!-- Rung 4 (Center peak) -->
+    <line class="bond" id="b3" x1="280" y1="250" x2="280" y2="250" />
+    <circle class="node" id="n3-top" cx="280" cy="250" r="18" />
+    <circle class="node" id="n3-bot" cx="280" cy="250" r="30" />
+
+    <!-- Rung 5 -->
+    <line class="bond" id="b4" x1="340" y1="250" x2="340" y2="250" />
+    <circle class="node" id="n4-top" cx="340" cy="250" r="18" />
+    <circle class="node" id="n4-bot" cx="340" cy="250" r="28" />
+
+    <!-- Rung 6 -->
+    <line class="bond" id="b5" x1="400" y1="250" x2="400" y2="250" />
+    <circle class="node" id="n5-top" cx="400" cy="250" r="28" />
+    <circle class="node" id="n5-bot" cx="400" cy="250" r="18" />
+
+    <!-- Rung 7 -->
+    <line class="bond" id="b6" x1="460" y1="250" x2="460" y2="250" />
+    <circle class="node" id="n6-top" cx="460" cy="250" r="30" />
+    <circle class="node" id="n6-bot" cx="460" cy="250" r="18" />
+  </g>
+
+  <!-- Typography Element -->
+  <g clip-path="url(#text-reveal-clip)">
+    <text id="brand-text" class="company-text" x="455" y="250">CAS-NGS</text>
+  </g>
+</svg>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

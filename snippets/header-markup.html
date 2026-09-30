@@ -1,0 +1,106 @@
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CAS-NGS HEADER — markup for the snippet route
+
+     Paste into a Custom HTML block (or straight after <body> in a classic
+     theme), then add:
+       · CSS snippet → contents of ../assets/header-footer.css
+       · JS snippet  → contents of ../assets/header-footer.js
+                       (loads Three.js r128 itself for the ambient canvas)
+
+     In WordPress you normally won't need this file — use the "CAS-NGS
+     Header" block or cas_ngs_header() and the menu is rendered for you.
+     This sample shows the exact markup the engine expects, with two
+     dropdown groups. data-cas-* attributes are the engine's hooks.
+     ══════════════════════════════════════════════════════════════════════════ -->
+
+<header class="cas-header" data-cas-header>
+  <div class="cas-dock-bar">
+    <canvas class="cas-dock-canvas" aria-hidden="true"></canvas>
+
+    <a class="cas-dock-brand" href="/" aria-label="CAS-NGS home">
+      <span class="cas-dock-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14Z" />
+          <path d="M5 19c3-5 6-8 10-10" />
+        </svg>
+      </span>
+      <span class="cas-dock-word">CAS-NGS</span>
+    </a>
+
+    <nav class="cas-dock" data-cas-dock aria-label="Primary navigation">
+      <a class="cas-dock-item is-active" href="/" aria-current="page"><span>Home</span></a>
+
+      <div class="cas-dock-group">
+        <button type="button" class="cas-dock-item cas-dock-item--parent" data-cas-toggle aria-haspopup="true" aria-expanded="false">
+          <span>Sequencing</span>
+          <svg class="cas-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="cas-dropdown" data-cas-dropdown>
+          <a class="cas-dropdown__link" href="/sequencing/hmw-dna"><span>HMW DNA Extraction</span><small>Ultra-long reads</small></a>
+          <a class="cas-dropdown__link" href="/sequencing/direct-rna"><span>Direct RNA-Seq</span><small>No conversion bias</small></a>
+          <a class="cas-dropdown__link" href="/sequencing/methylation"><span>5mC &amp; 6mA Methylation</span><small>Native detection</small></a>
+          <a class="cas-dropdown__link" href="/sequencing/adaptive"><span>Adaptive Sampling</span><small>Real-time enrichment</small></a>
+        </div>
+      </div>
+
+      <div class="cas-dock-group">
+        <button type="button" class="cas-dock-item cas-dock-item--parent" data-cas-toggle aria-haspopup="true" aria-expanded="false">
+          <span>Research</span>
+          <svg class="cas-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="cas-dropdown" data-cas-dropdown>
+          <a class="cas-dropdown__link" href="/research/methods"><span>Nanopore Methods</span><small>Wet-lab protocols</small></a>
+          <a class="cas-dropdown__link" href="/research/data"><span>Open Data</span><small>Public runs</small></a>
+        </div>
+      </div>
+
+      <a class="cas-dock-item" href="/training"><span>Training</span></a>
+      <a class="cas-dock-item" href="/about"><span>About</span></a>
+    </nav>
+
+    <div class="cas-dock-actions">
+      <a class="cas-dock-cta" href="/contact">
+        <span>Request a Run</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+      </a>
+      <button type="button" class="cas-burger" data-cas-burger aria-expanded="false" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- mobile drawer (engine fills behaviour; markup mirrors the menu) -->
+  <div class="cas-mobile" data-cas-mobile aria-hidden="true">
+    <nav class="cas-mobile__nav" aria-label="Mobile navigation">
+      <a class="cas-m-item" href="/"><span>Home</span></a>
+      <div class="cas-m-group">
+        <button type="button" class="cas-m-item cas-m-item--parent" data-cas-m-toggle aria-expanded="false">
+          <span>Sequencing</span>
+          <svg class="cas-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="cas-m-sub">
+          <a class="cas-m-sublink" href="/sequencing/hmw-dna">HMW DNA Extraction</a>
+          <a class="cas-m-sublink" href="/sequencing/direct-rna">Direct RNA-Seq</a>
+          <a class="cas-m-sublink" href="/sequencing/methylation">5mC &amp; 6mA Methylation</a>
+          <a class="cas-m-sublink" href="/sequencing/adaptive">Adaptive Sampling</a>
+        </div>
+      </div>
+      <div class="cas-m-group">
+        <button type="button" class="cas-m-item cas-m-item--parent" data-cas-m-toggle aria-expanded="false">
+          <span>Research</span>
+          <svg class="cas-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="cas-m-sub">
+          <a class="cas-m-sublink" href="/research/methods">Nanopore Methods</a>
+          <a class="cas-m-sublink" href="/research/data">Open Data</a>
+        </div>
+      </div>
+      <a class="cas-m-item" href="/training"><span>Training</span></a>
+      <a class="cas-m-item" href="/about"><span>About</span></a>
+    </nav>
+    <a class="cas-dock-cta cas-mobile__cta" href="/contact">
+      <span>Request a Run</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+    </a>
+  </div>
+</header>

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/dna-background",
+  "version": "1.3.0",
+  "title": "3D DNA Helix Background",
+  "category": "cas-ngs-biotech",
+  "icon": "visibility",
+  "description": "Fixed full-viewport 3D DNA double helix simulation engine powered by Three.js and GSAP ScrollTrigger.",
+  "keywords": [
+    "3d",
+    "dna",
+    "helix",
+    "threejs",
+    "background",
+    "simulation"
+  ],
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "model_url": {
+      "type": "string",
+      "default": ""
+    },
+    "scale": {
+      "type": "number",
+      "default": 1.0
+    },
+    "offset_x": {
+      "type": "number",
+      "default": 0.0
+    },
+    "offset_y": {
+      "type": "number",
+      "default": 0.0
+    },
+    "strand_color": {
+      "type": "string",
+      "default": "#8c6d58"
+    },
+    "accent_color": {
+      "type": "string",
+      "default": "#4ade80"
+    },
+    "ambient_intensity": {
+      "type": "number",
+      "default": 1.8
+    },
+    "enable_cycling": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "style": "cas-ngs-biotech-blocks-css",
+  "editorScript": "cas-ngs-biotech-blocks-editor",
+  "render": "file:./render.php"
+}
