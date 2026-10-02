@@ -16,7 +16,7 @@
 			var headerSelector = '.cas-header, .cas-header-dock-wrap, .animated-top-dock-component.atd-modern';
 			var headerOffset = 0;
 
-			function updateStageSize() {
+			function updateHeaderOffset() {
 				var headerBottom = 0;
 				document.querySelectorAll(headerSelector).forEach(function (header) {
 					var style = window.getComputedStyle(header);
@@ -26,14 +26,10 @@
 					}
 				});
 
-				headerOffset = Math.ceil(headerBottom + 16);
-				var visibleStageHeight = Math.max(0, window.innerHeight - headerOffset);
-				var cardShift = Math.max(0, 506 - (visibleStageHeight / 2));
-				root.style.setProperty('--csh-header-offset', headerOffset + 'px');
-				root.style.setProperty('--csh-card-shift', cardShift + 'px');
+				headerOffset = Math.ceil(headerBottom);
 			}
 
-			updateStageSize();
+			updateHeaderOffset();
 
 			cards.forEach(function (card, index) {
 				if (index > 0) window.gsap.set(card, { yPercent: 100, opacity: 0 });
@@ -43,7 +39,7 @@
 				scrollTrigger: {
 					trigger: stack,
 					start: function () { return 'top ' + headerOffset + 'px'; },
-					end: function () { return '+=' + (window.innerHeight * 3); },
+					end: '+=3600',
 					pin: true,
 					scrub: 0.8,
 					invalidateOnRefresh: true
@@ -58,7 +54,7 @@
 				.to(cards[3], { opacity: 1, duration: 0.8, ease: 'power1.out' }, '<');
 
 			window.addEventListener('resize', function () {
-				updateStageSize();
+				updateHeaderOffset();
 				window.ScrollTrigger.refresh();
 			});
 		});

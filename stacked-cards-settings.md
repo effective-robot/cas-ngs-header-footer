@@ -1,41 +1,41 @@
 # Stacked Cards Settings
 
-The block keeps the standalone card and image dimensions by default. The frontend stylesheet is `assets/css/stacking-hero.css`; the header-aware stage sizing and scroll trigger are in `assets/js/stacking-hero.js`.
+The block's structure, dimensions, spacing, colors, image placement, and GSAP timeline follow `stacked-cards/index.html`. The sole behavior adjustment is that the animation pin starts when the stack reaches the bottom edge of the visible fixed header. Styles are in `assets/css/stacking-hero.css`; animation and header detection are in `assets/js/stacking-hero.js`.
 
-## Main Dimensions
+## Original Section Dimensions
 
-| Part | Current setting | What it controls |
+| Part | Original value | CSS location |
 | --- | --- | --- |
-| Card width | `width: 1100px; max-width: 92vw` | Maximum card width and its mobile/tablet width |
-| Card height | `height: 440px` on `.cards-wrapper` and `.bio-card` | Fixed outer card height |
-| Section scroll length | `height: 100vh` on `.stack-container` | The unpinned section's layout height; the cards are pinned for the animation range in the JS |
-| Pin duration | `window.innerHeight * 3` in `assets/js/stacking-hero.js` | Scroll distance used to reveal all four cards |
-| Card corner radius | `border-radius: 28px` on `.bio-card` | Outer card corners |
-| Card horizontal inset | `padding: 0 60px` on `.bio-card` | Distance of the text panel from the card edges |
+| Intro spacer | `35vh` | `.hero-spacer` height |
+| Stack section | `450vh` | `.stack-container` height |
+| Sticky stage | `100vh`, `top: 0` | `.card-sticky-wrapper` |
+| Card track | `1100px`, maximum `92vw` | `.cards-wrapper` |
+| Outer cards | `440px` high | `.cards-wrapper` and `.bio-card` |
+| Card radius | `28px` | `.bio-card` |
+| Card horizontal padding | `0 60px` | `.bio-card` |
+| Glass panel | `500px` max width; `30px 35px` padding; `20px` radius | `.bio-text-box` |
+| Outro spacer | `40vh` | `.outro-spacer` |
+| Scroll animation range | `+=3600` pixels | ScrollTrigger `end` in `assets/js/stacking-hero.js` |
 
-To change the desktop card size, edit both `.cards-wrapper` and `.bio-card` consistently. Keep their heights equal so the image anchors and card stack continue to line up. The `max-width: 92vw` rule makes the card track narrower on small screens without reducing its height.
+To change outer card height, change both `.cards-wrapper` and `.bio-card` heights to the same value. To change the track width, adjust its `width` and `max-width`. The outer card's horizontal padding and glass panel's padding are independent controls.
 
-## Image Size And Position
+## Original Image Geometry
 
-Each image wrapper is anchored to the card and sized independently:
+Image wrapper heights and anchors are independent by card:
 
-| Card | Wrapper height | Position |
+| Card | Wrapper height | Anchor |
 | --- | --- | --- |
-| Plants | `165%` of the card | `right: 0; bottom: 0` |
-| Humans | `135%` of the card | `left: 10px; bottom: 0` |
-| Animals | `125%` of the card | `right: -60px; bottom: 0` |
-| Microbes | `150%` of the card | `left: 0; bottom: -50px` |
+| Plants | `165%` of card height | `right: 0; bottom: 0` |
+| Humans | `135%` | `left: 10px; bottom: 0` |
+| Animals | `125%` | `right: -60px; bottom: 0` |
+| Microbes | `150%` | `left: 0; bottom: -50px` |
 
-These values are the original standalone proportions. Increase or decrease a wrapper's `height` percentage to scale that image. Adjust its `left`/`right` and `bottom` values to reposition it. The nested `img` uses `height: 100%`, `width: auto`, and `object-fit: contain`, preserving the source image ratio.
+Adjust a wrapper's `height` percentage to scale its image. Adjust `left` or `right` to move it horizontally, and `bottom` to move it vertically. The image itself is `height: 100%`, `width: auto`, and `object-fit: contain`, so its aspect ratio is preserved. The corresponding CSS selectors are `.card-plants .bio-image-wrapper`, `.card-humans .bio-image-wrapper`, `.card-animals .bio-image-wrapper`, and `.card-microbes .bio-image-wrapper`.
 
-## Text Panel And Spacing
+## Typography And Colors
 
-The glass text panel is controlled by `.bio-text-box`: `max-width: 500px`, `padding: 30px 35px`, `border-radius: 20px`, and its translucent background and blur. The card's horizontal padding is separate from the panel padding. Use the Gutenberg sidebar for each card's text, image, alt text, background color, and typography; use these CSS rules for layout and image placement.
+Use the block sidebar for the intro heading, each card's tag/title/description, image URL or media selection, alt text, background hex color, font family, and font sizes. The CSS defaults mirror the source HTML: intro heading `2.8rem`; tags `0.8rem`; card titles `2.4rem`; descriptions `0.98rem`. Glass panel opacity, blur, text colors, and card shadows are also in `assets/css/stacking-hero.css`.
 
-## Header Clearance And Vertical Placement
+## Header Offset
 
-The script measures the visible site header from `.cas-header`, `.cas-header-dock-wrap`, or `.animated-top-dock-component.atd-modern`, then adds a 16px clearance. `--csh-header-offset` controls the sticky stage's top and usable height. `margin-top: clamp(96px, 12vh, 128px)` on `.csh-root` provides the initial gap from the preceding section.
-
-`--csh-card-shift` positions the original 440px card and its tallest image below the header without shrinking either. Its calculation in `updateStageSize()` uses the remaining viewport height. To manually change the initial gap, adjust the `margin-top` clamp. To change the header breathing room, adjust the `+ 16` in `updateStageSize()`; the value is in pixels.
-
-The fixed 440px card and original image proportions are retained even on short viewports. If the available space is less than the combined header clearance and image overhang, some image overflow may extend beyond the visible screen; reducing image dimensions would be needed to make that fit on unusually short screens.
+The script detects the visible fixed header using `.cas-header`, `.cas-header-dock-wrap`, or `.animated-top-dock-component.atd-modern`. The measured bottom edge is used as the ScrollTrigger `start` offset. The section continues to scroll naturally until its top reaches that edge, then the stack pins and the original card animation plays. To change the header clearance behavior, edit `updateHeaderOffset()` and the ScrollTrigger `start` callback in `assets/js/stacking-hero.js`; card sizing and position do not depend on this measurement.

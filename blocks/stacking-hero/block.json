@@ -9,6 +9,7 @@
   "description": "Four animated, editable biotech cards with a pinned scroll stack.",
   "textdomain": "cas-ngs-biotech-blocks",
   "attributes": {
+    "introTitle": { "type": "string", "default": "Scroll Down to Explore Our Core Disciplines" },
     "cards": {
       "type": "array",
       "default": [
