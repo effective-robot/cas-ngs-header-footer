@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cas-ngs/stacking-hero",
+  "version": "1.0.0",
+  "title": "Stacking Hero",
+  "category": "cas-ngs-biotech",
+  "icon": "images-alt2",
+  "description": "Four animated, editable biotech cards with a pinned scroll stack.",
+  "textdomain": "cas-ngs-biotech-blocks",
+  "attributes": {
+    "introTitle": { "type": "string", "default": "Scroll Down to Explore Our Core Disciplines" },
+    "cards": {
+      "type": "array",
+      "default": [
+        { "tag": "[ 01 • PLANT GENOMICS ]", "title": "We Study Plants", "description": "Decoding complex plant genomes, promoter motifs, and transcriptional signatures to engineer climate-resilient crops and secure future agricultural yields.", "imageUrl": "", "imageAlt": "Sunflower", "backgroundColor": "#d89972" },
+        { "tag": "[ 02 • HUMAN HEALTH ]", "title": "We Study Humans", "description": "Unlocking genetic blueprints and deep biomarker pathways to accelerate precision medicine, diagnostics, and breakthrough therapeutic discoveries.", "imageUrl": "", "imageAlt": "Human DNA Study", "backgroundColor": "#b3805d" },
+        { "tag": "[ 03 • ANIMAL BIOTECH ]", "title": "We Study Animals", "description": "Advancing comparative genomics and molecular selection to optimize livestock health, breeding efficiency, and sustainable agricultural productivity.", "imageUrl": "", "imageAlt": "Animal Study", "backgroundColor": "#e6c8b3" },
+        { "tag": "[ 04 • METAGENOMICS ]", "title": "We Study Microbes", "description": "Exploring complex microbial ecosystems and plant-microbe interactions to pioneer next-generation industrial and environmental biotech solutions.", "imageUrl": "", "imageAlt": "Fungi and Bacteria Study", "backgroundColor": "#c29b7a" }
+      ]
+    },
+    "fontFamily": { "type": "string", "default": "Plus Jakarta Sans" },
+    "titleFontSize": { "type": "number", "default": 2.4 },
+    "descriptionFontSize": { "type": "number", "default": 0.98 },
+    "tagFontSize": { "type": "number", "default": 0.8 }
+  },
+  "supports": { "align": [ "full" ], "html": false },
+  "render": "file:./render.php",
+  "editorScript": "cas-ngs-stacking-hero-editor",
+  "viewScript": "cas-ngs-stacking-hero-engine",
+  "style": "cas-ngs-stacking-hero-style"
+}

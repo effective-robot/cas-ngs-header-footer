@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap');
+
+.csh-root,
+.csh-root * {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+.csh-root {
+	position: relative;
+	left: 50%;
+	width: 100vw;
+	margin-left: -50vw;
+	background-color: #f3efe6;
+	color: #1a1a1a;
+	font-family: var(--csh-font-family, 'Plus Jakarta Sans'), sans-serif;
+	overflow-x: clip;
+}
+
+.csh-root .hero-spacer {
+	height: 35vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 0 20px;
+}
+
+.csh-root .hero-spacer h1 {
+	font-size: 2.8rem;
+	font-weight: 800;
+	color: #2c221e;
+}
+
+.csh-root .stack-container {
+	position: relative;
+	width: 100%;
+	height: 450vh;
+}
+
+.csh-root .card-sticky-wrapper {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.csh-root .cards-wrapper {
+	position: relative;
+	width: 1100px;
+	max-width: 92vw;
+	height: 440px;
+}
+
+.csh-root .bio-card {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 440px;
+	border-radius: 28px;
+	display: flex;
+	align-items: center;
+	padding: 0 60px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+	overflow: visible;
+}
+
+.csh-root .card-plants { background-color: var(--card-background, #d89972); z-index: 1; }
+.csh-root .card-humans { background-color: var(--card-background, #b3805d); z-index: 2; justify-content: flex-end; }
+.csh-root .card-animals { background-color: var(--card-background, #e6c8b3); z-index: 3; }
+.csh-root .card-microbes { background-color: var(--card-background, #c29b7a); z-index: 4; justify-content: flex-end; }
+
+.csh-root .bio-text-box {
+	background: rgba(255, 255, 255, 0.18);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 20px;
+	padding: 30px 35px;
+	max-width: 500px;
+	z-index: 5;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.csh-root .bio-tag {
+	display: inline-block;
+	font-size: var(--csh-tag-size, 0.8rem);
+	font-weight: 800;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+	opacity: 0.85;
+}
+
+.csh-root .bio-title {
+	font-size: var(--csh-title-size, 2.4rem);
+	font-weight: 800;
+	letter-spacing: -0.5px;
+	line-height: 1.15;
+	margin-bottom: 12px;
+}
+
+.csh-root .bio-desc {
+	font-size: var(--csh-description-size, 0.98rem);
+	line-height: 1.6;
+	opacity: 0.95;
+	font-weight: 600;
+}
+
+.csh-root .card-plants .bio-tag,
+.csh-root .card-plants .bio-title,
+.csh-root .card-plants .bio-desc { color: #0c3610; }
+.csh-root .card-humans .bio-tag,
+.csh-root .card-humans .bio-title,
+.csh-root .card-humans .bio-desc { color: #04123c; }
+.csh-root .card-animals .bio-tag,
+.csh-root .card-animals .bio-title,
+.csh-root .card-animals .bio-desc { color: #c47505; }
+.csh-root .card-microbes .bio-tag,
+.csh-root .card-microbes .bio-title,
+.csh-root .card-microbes .bio-desc { color: #6b0000; }
+
+.csh-root .card-plants .bio-image-wrapper {
+	position: absolute; right: 0; bottom: 0; height: 165%; display: flex;
+	align-items: flex-end; justify-content: flex-end; z-index: 6; pointer-events: none;
+}
+.csh-root .card-plants .bio-image-wrapper img {
+	height: 100%; width: auto; object-fit: contain; border-bottom-right-radius: 28px;
+	filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.3));
+}
+.csh-root .card-humans .bio-image-wrapper {
+	position: absolute; left: 10px; bottom: 0; height: 135%; display: flex;
+	align-items: flex-end; justify-content: flex-start; z-index: 6; pointer-events: none;
+}
+.csh-root .card-humans .bio-image-wrapper img {
+	height: 100%; width: auto; object-fit: contain; border-bottom-left-radius: 28px;
+	filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.3));
+}
+.csh-root .card-animals .bio-image-wrapper {
+	position: absolute; right: -60px; bottom: 0; height: 125%; display: flex;
+	align-items: flex-end; justify-content: flex-end; z-index: 6; pointer-events: none;
+}
+.csh-root .card-animals .bio-image-wrapper img {
+	height: 100%; width: auto; object-fit: contain; border-bottom-right-radius: 28px;
+	filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.3));
+}
+.csh-root .card-microbes .bio-image-wrapper {
+	position: absolute; left: 0; bottom: -50px; height: 150%; display: flex;
+	align-items: flex-end; justify-content: flex-start; z-index: 6; pointer-events: none;
+}
+.csh-root .card-microbes .bio-image-wrapper img {
+	height: 100%; width: auto; object-fit: contain; border-bottom-left-radius: 28px;
+	filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.3));
+}
+
+.csh-root .outro-spacer { height: 40vh; }
