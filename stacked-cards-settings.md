@@ -1,14 +1,15 @@
 # Stacked Cards Settings
 
-The block's structure, dimensions, spacing, colors, image placement, and GSAP timeline follow `stacked-cards/index.html`. The sole behavior adjustment is that the animation pin starts when the stack reaches the bottom edge of the visible fixed header. Styles are in `assets/css/stacking-hero.css`; animation and header detection are in `assets/js/stacking-hero.js`.
+The block's structure, dimensions, spacing, colors, image placement, and GSAP timeline follow `stacked-cards/index.html`. The only layout exception is that the block's `.stack-container` is `100vh` instead of `450vh` to remove the excess section tail. Styles are in `assets/css/stacking-hero.css`; animation is in `assets/js/stacking-hero.js`.
 
 ## Original Section Dimensions
 
 | Part | Original value | CSS location |
 | --- | --- | --- |
 | Intro spacer | `35vh` | `.hero-spacer` height |
-| Stack section | `450vh` | `.stack-container` height |
-| Sticky stage | `100vh`, `top: 0` | `.card-sticky-wrapper` |
+| Source stack section | `450vh`; plugin uses `100vh` to remove the excess section tail | `.stack-container` height |
+| Sticky stage | `calc(100vh - 120px)`, `top: 120px` | `.card-sticky-wrapper` |
+| Sticky-stage overflow and top padding | `visible`; `40px` | `.card-sticky-wrapper` |
 | Card track | `1100px`, maximum `92vw` | `.cards-wrapper` |
 | Outer cards | `440px` high | `.cards-wrapper` and `.bio-card` |
 | Card radius | `28px` | `.bio-card` |
@@ -36,6 +37,8 @@ Adjust a wrapper's `height` percentage to scale its image. Adjust `left` or `rig
 
 Use the block sidebar for the intro heading, each card's tag/title/description, image URL or media selection, alt text, background hex color, font family, and font sizes. The CSS defaults mirror the source HTML: intro heading `2.8rem`; tags `0.8rem`; card titles `2.4rem`; descriptions `0.98rem`. Glass panel opacity, blur, text colors, and card shadows are also in `assets/css/stacking-hero.css`.
 
-## Header Offset
+## Header Fit And Trailing Space
 
-The script detects the visible fixed header using `.cas-header`, `.cas-header-dock-wrap`, or `.animated-top-dock-component.atd-modern`. The measured bottom edge is used as the ScrollTrigger `start` offset. The section continues to scroll naturally until its top reaches that edge, then the stack pins and the original card animation plays. To change the header clearance behavior, edit `updateHeaderOffset()` and the ScrollTrigger `start` callback in `assets/js/stacking-hero.js`; card sizing and position do not depend on this measurement.
+The source HTML sets `.card-sticky-wrapper` to `top: 120px`, `height: calc(100vh - 120px)`, `overflow: visible`, and `padding-top: 40px`; these values are copied directly into the block CSS. If the fixed header height changes, update both `120px` values in `top` and `height` together. The 40px padding independently controls internal stage breathing room.
+
+The standalone source uses `.stack-container { height: 450vh; }`. The plugin uses `100vh` as the requested tail-space adjustment. The animation itself still uses `start: 'top top'`, `end: '+=3600'`, and the source's card tween timings. On leaving the pinned section, the source's overflow fix is applied to that block's own stack container. To restore the full standalone section height, change only `.stack-container` back to `450vh`.

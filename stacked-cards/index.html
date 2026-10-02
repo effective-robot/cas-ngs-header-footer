@@ -45,14 +45,16 @@
             height: 450vh;
         }
 
+        /* HEADER FIX: Pinned container leaves space at the top for your fixed header */
         .card-sticky-wrapper {
             position: sticky;
-            top: 0;
-            height: 100vh;
+            top: 120px; /* Adjust this value (e.g., 80px to 110px) to match your live header's exact height */
+            height: calc(100vh - 120px); /* Subtracts header height so it fits the remaining screen view */
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible; /* Changed from hidden to visible so pop-out images aren't clipped */
+            padding-top: 40px; /* Adds breathing room so images clear the header boundary */
         }
 
         .cards-wrapper {
@@ -307,7 +309,11 @@
                 end: "+=3600",
                 pin: true,
                 scrub: 0.8,
-                invalidateOnRefresh: true
+                invalidateOnRefresh: true,
+                onLeave: () => {
+                    // Prevents the end-of-page stacking pile-up glitch
+                    document.querySelector('.stack-container').style.overflow = 'hidden';
+                }
             }
         });
 
