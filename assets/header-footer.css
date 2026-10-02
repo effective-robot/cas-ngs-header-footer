@@ -480,8 +480,10 @@ html.cas-lock body {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  padding: 118px clamp(20px, 6vw, 48px) 40px;
+  padding: 118px clamp(20px, 6vw, 48px) max(40px, env(safe-area-inset-bottom));
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   background: rgba(237, 224, 212, 0.96); /* --sylva-t5 */
   -webkit-backdrop-filter: blur(22px);
   backdrop-filter: blur(22px);
@@ -490,6 +492,10 @@ html.cas-lock body {
   transform: translateY(-16px);
   transition: opacity 0.4s var(--cas-ease), transform 0.4s var(--cas-ease), visibility 0.4s;
   pointer-events: auto;
+}
+
+.cas-header.mobile-open .cas-dock-bar {
+  z-index: 141;
 }
 
 .cas-header.mobile-open .cas-mobile {

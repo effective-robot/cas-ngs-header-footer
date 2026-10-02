@@ -80,3 +80,18 @@ body.cas-splash-complete #cas-splash {
 #cas-splash #dna-mark {
   opacity: 0;
 }
+
+@media (max-width: 767px) {
+  .cas-splash-inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  #cas-splash svg {
+    width: 100%;
+    max-width: 950px;
+    height: auto;
+  }
+}

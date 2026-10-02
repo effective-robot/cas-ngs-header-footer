@@ -217,6 +217,7 @@
     function setOpen(open) {
       header.classList.toggle("mobile-open", open);
       burger.setAttribute("aria-expanded", String(open));
+      burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       panel.setAttribute("aria-hidden", String(!open));
       document.documentElement.classList.toggle("cas-lock", open);
     }

@@ -160,4 +160,70 @@
 	filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.3));
 }
 
+@media (max-width: 768px) {
+	.csh-root .cards-wrapper,
+	.csh-root .bio-card {
+		width: 92vw;
+		height: 480px;
+		padding: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.csh-root .bio-card .bio-image-wrapper {
+		position: absolute;
+		top: auto;
+		right: auto;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100%;
+		height: 140%;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		z-index: 4;
+		pointer-events: none;
+	}
+
+	.csh-root .bio-card .bio-image-wrapper img {
+		width: auto;
+		height: 100%;
+		max-width: 100%;
+		object-fit: contain;
+		filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.25));
+	}
+
+	.csh-root .bio-text-box {
+		position: relative;
+		z-index: 6;
+		width: 100%;
+		max-width: 100%;
+		padding: 22px;
+		border: 1px solid rgba(255, 255, 255, 0.38);
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.22);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		text-align: center;
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+	}
+
+	.csh-root .bio-title {
+		font-size: 1.55rem;
+		margin-bottom: 6px;
+	}
+
+	.csh-root .bio-desc {
+		font-size: 0.84rem;
+		line-height: 1.45;
+	}
+
+	.csh-root .bio-tag {
+		font-size: 0.65rem;
+		margin-bottom: 4px;
+	}
+}
+
 .csh-root .outro-spacer { height: 40vh; }

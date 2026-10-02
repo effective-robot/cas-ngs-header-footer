@@ -38,23 +38,22 @@
             color: #2c221e;
         }
 
-        /* Stacking Section Container (Extended height for 4 cards) */
+        /* Stacking Section Container */
         .stack-container {
             position: relative;
             width: 100%;
             height: 450vh;
         }
 
-        /* HEADER FIX: Pinned container leaves space at the top for your fixed header */
         .card-sticky-wrapper {
             position: sticky;
-            top: 120px; /* Adjust this value (e.g., 80px to 110px) to match your live header's exact height */
-            height: calc(100vh - 120px); /* Subtracts header height so it fits the remaining screen view */
+            top: 110px; 
+            height: calc(100vh - 110px); 
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: visible; /* Changed from hidden to visible so pop-out images aren't clipped */
-            padding-top: 40px; /* Adds breathing room so images clear the header boundary */
+            overflow: visible; 
+            padding-top: 40px; 
         }
 
         .cards-wrapper {
@@ -64,7 +63,7 @@
             height: 440px;
         }
 
-        /* Individual Stacked Card Styling */
+        /* Individual Stacked Card Styling (Desktop Default) */
         .bio-card {
             position: absolute;
             top: 0;
@@ -134,90 +133,102 @@
 
 
         /* ==========================================================
-           INDEPENDENT IMAGE CONTROL
+           DESKTOP IMAGE CONTROL
            ========================================================== */
-
-        /* --- CARD 1: PLANTS (Sunflower - Right) --- */
         .card-plants .bio-image-wrapper {
-            position: absolute;
-            right: 0px;   
-            bottom: 0px;  
-            height: 165%; 
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            z-index: 6;
-            pointer-events: none;
+            position: absolute; right: 0px; bottom: 0px; height: 165%; 
+            display: flex; align-items: flex-end; justify-content: flex-end; z-index: 6; pointer-events: none;
         }
-        .card-plants .bio-image-wrapper img {
-            height: 100%;  
-            width: auto;
-            object-fit: contain;
-            border-bottom-right-radius: 28px;
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
-        }
+        .card-plants .bio-image-wrapper img { height: 100%; width: auto; object-fit: contain; border-bottom-right-radius: 28px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)); }
 
-
-        /* --- CARD 2: HUMANS (DNA Matrix - Left) --- */
         .card-humans .bio-image-wrapper {
-            position: absolute;
-            left: 10px;    
-            bottom: 0px;  
-            height: 135%; 
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-start;
-            z-index: 6;
-            pointer-events: none;
+            position: absolute; left: 10px; bottom: 0px; height: 135%; 
+            display: flex; align-items: flex-end; justify-content: flex-start; z-index: 6; pointer-events: none;
         }
-        .card-humans .bio-image-wrapper img {
-            height: 100%;  
-            width: auto;
-            object-fit: contain;
-            border-bottom-left-radius: 28px; 
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
-        }
+        .card-humans .bio-image-wrapper img { height: 100%; width: auto; object-fit: contain; border-bottom-left-radius: 28px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)); }
 
-
-        /* --- CARD 3: ANIMALS (Donkey - Right) --- */
         .card-animals .bio-image-wrapper {
-            position: absolute;
-            right: -60px;   
-            bottom: 0px;  
-            height: 125%; 
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            z-index: 6;
-            pointer-events: none;
+            position: absolute; right: -60px; bottom: 0px; height: 125%; 
+            display: flex; align-items: flex-end; justify-content: flex-end; z-index: 6; pointer-events: none;
         }
-        .card-animals .bio-image-wrapper img {
-            height: 100%;  
-            width: auto;
-            object-fit: contain;
-            border-bottom-right-radius: 28px;
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
-        }
+        .card-animals .bio-image-wrapper img { height: 100%; width: auto; object-fit: contain; border-bottom-right-radius: 28px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)); }
 
-
-        /* --- CARD 4: MICROBES (Fungi & Bacteria - Left) --- */
         .card-microbes .bio-image-wrapper {
-            position: absolute;
-            left: 0px;    
-            bottom: -50px;  
-            height: 150%; 
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-start;
-            z-index: 6;
-            pointer-events: none;
+            position: absolute; left: 0px; bottom: -50px; height: 150%; 
+            display: flex; align-items: flex-end; justify-content: flex-start; z-index: 6; pointer-events: none;
         }
-        .card-microbes .bio-image-wrapper img {
-            height: 100%;  
-            width: auto;
-            object-fit: contain;
-            border-bottom-left-radius: 28px; 
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
+        .card-microbes .bio-image-wrapper img { height: 100%; width: auto; object-fit: contain; border-bottom-left-radius: 28px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)); }
+
+
+        /* ==========================================================
+           RESPONSIVE MOBILE OPTIMIZATION (Screens < 768px)
+           All images anchored to card bottom, bursting out top border,
+           with true glassmorphic foreground text boxes.
+           ========================================================== */
+        @media (max-width: 768px) {
+            .cards-wrapper, .bio-card {
+                width: 92vw;
+                height: 480px;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Image wrapper strictly anchored to bottom border, extending upward to pop out of top */
+            .bio-card .bio-image-wrapper {
+                position: absolute !important;
+                bottom: 0 !important;
+                top: auto !important;
+                left: 50% !important;
+                transform: translateX(-50%);
+                height: 140% !important; /* Forces asset to pop out cleanly from the top border */
+                width: 100% !important;
+                display: flex !important;
+                align-items: flex-end !important;
+                justify-content: center !important;
+                z-index: 4 !important;
+                pointer-events: none;
+            }
+
+            .bio-card .bio-image-wrapper img {
+                height: 100% !important;
+                width: auto !important;
+                max-width: 100% !important;
+                object-fit: contain !important;
+                filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
+            }
+
+            /* True glassmorphism foreground card allowing background image transparency */
+            .bio-text-box {
+                position: relative;
+                z-index: 6;
+                width: 100%;
+                max-width: 100%;
+                background: rgba(255, 255, 255, 0.22); /* Transparent glass showing image behind */
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.38);
+                padding: 22px;
+                border-radius: 18px;
+                text-align: center;
+                box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            }
+
+            .bio-title {
+                font-size: 1.55rem;
+                margin-bottom: 6px;
+            }
+
+            .bio-desc {
+                font-size: 0.84rem;
+                line-height: 1.45;
+            }
+
+            .bio-tag {
+                font-size: 0.65rem;
+                margin-bottom: 4px;
+            }
         }
 
         .outro-spacer { height: 40vh; }
@@ -311,7 +322,6 @@
                 scrub: 0.8,
                 invalidateOnRefresh: true,
                 onLeave: () => {
-                    // Prevents the end-of-page stacking pile-up glitch
                     document.querySelector('.stack-container').style.overflow = 'hidden';
                 }
             }
