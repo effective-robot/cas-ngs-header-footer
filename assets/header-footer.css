@@ -606,6 +606,9 @@ html.cas-lock body {
 
 .cas-mobile__cta {
   align-self: flex-start;
+  display: inline-flex;
+  flex: none;
+  order: -1;
   height: 50px;
   padding: 0 26px;
   font-size: 15px;

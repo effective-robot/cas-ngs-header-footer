@@ -161,14 +161,28 @@
 }
 
 @media (max-width: 768px) {
+	.csh-root .card-sticky-wrapper {
+		position: relative;
+		top: auto;
+		height: calc(100vh - 120px);
+		transform: translateY(120px);
+	}
+
 	.csh-root .cards-wrapper,
 	.csh-root .bio-card {
 		width: 92vw;
-		height: 480px;
 		padding: 20px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.csh-root .cards-wrapper {
+		height: 480px;
+	}
+
+	.csh-root .bio-card {
+		height: 440px;
 	}
 
 	.csh-root .bio-card .bio-image-wrapper {
@@ -197,6 +211,7 @@
 
 	.csh-root .bio-text-box {
 		position: relative;
+		transform: translateY(16px);
 		z-index: 6;
 		width: 100%;
 		max-width: 100%;

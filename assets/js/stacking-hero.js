@@ -24,11 +24,9 @@
 					start: 'top top',
 					end: '+=3600',
 					pin: true,
+					anticipatePin: 1,
 					scrub: 0.8,
-					invalidateOnRefresh: true,
-					onLeave: function () {
-						stack.style.overflow = 'hidden';
-					}
+					invalidateOnRefresh: true
 				}
 			});
 
