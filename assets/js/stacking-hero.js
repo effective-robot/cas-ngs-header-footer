@@ -13,6 +13,28 @@
 
 			var stack = root.querySelector('.stack-container');
 			var cards = window.gsap.utils.toArray(root.querySelectorAll('.bio-card'));
+			var headerSelector = '.cas-header, .cas-header-dock-wrap, .animated-top-dock-component.atd-modern';
+			var headerOffset = 0;
+
+			function updateStageSize() {
+				var headerBottom = 0;
+				document.querySelectorAll(headerSelector).forEach(function (header) {
+					var style = window.getComputedStyle(header);
+					var bounds = header.getBoundingClientRect();
+					if (style.display !== 'none' && style.visibility !== 'hidden' && bounds.width && bounds.height) {
+						headerBottom = Math.max(headerBottom, bounds.bottom);
+					}
+				});
+
+				headerOffset = Math.ceil(headerBottom + 16);
+				var stageHeight = Math.max(240, window.innerHeight - headerOffset - 16);
+				var cardHeight = Math.max(100, Math.min(440, (stageHeight - 100) / 1.65));
+				root.style.setProperty('--csh-header-offset', headerOffset + 'px');
+				root.style.setProperty('--csh-stage-height', stageHeight + 'px');
+				root.style.setProperty('--csh-card-height', cardHeight + 'px');
+			}
+
+			updateStageSize();
 
 			cards.forEach(function (card, index) {
 				if (index > 0) window.gsap.set(card, { yPercent: 100, opacity: 0 });
@@ -21,7 +43,7 @@
 			var timeline = window.gsap.timeline({
 				scrollTrigger: {
 					trigger: stack,
-					start: 'top top',
+					start: function () { return 'top ' + headerOffset + 'px'; },
 					end: function () { return '+=' + (window.innerHeight * 3); },
 					pin: true,
 					scrub: 0.8,
@@ -35,6 +57,11 @@
 				.to(cards[2], { opacity: 1, duration: 0.8, ease: 'power1.out' }, '<');
 			timeline.to(cards[3], { yPercent: 0, duration: 1, ease: 'none' }, '+=0.2')
 				.to(cards[3], { opacity: 1, duration: 0.8, ease: 'power1.out' }, '<');
+
+			window.addEventListener('resize', function () {
+				updateStageSize();
+				window.ScrollTrigger.refresh();
+			});
 		});
 	}
 

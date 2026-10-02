@@ -23,13 +23,12 @@
 .csh-root .stack-container {
 	position: relative;
 	width: 100%;
-	height: 100vh;
+	height: var(--csh-stage-height, 100vh);
 }
 
 .csh-root .card-sticky-wrapper {
-	position: sticky;
-	top: 0;
-	height: 100vh;
+	position: relative;
+	height: var(--csh-stage-height, 100vh);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -40,7 +39,8 @@
 	position: relative;
 	width: 1100px;
 	max-width: 92vw;
-	height: 440px;
+	height: var(--csh-card-height, 440px);
+	transform: translateY(32.5%);
 }
 
 .csh-root .bio-card {
@@ -48,7 +48,7 @@
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 440px;
+	height: var(--csh-card-height, 440px);
 	border-radius: 28px;
 	display: flex;
 	align-items: center;
