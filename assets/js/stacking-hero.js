@@ -12,10 +12,7 @@
 			root.dataset.stackingHeroInitialized = 'true';
 
 			var stack = root.querySelector('.stack-container');
-			var stickyWrapper = root.querySelector('.card-sticky-wrapper');
 			var cards = window.gsap.utils.toArray(root.querySelectorAll('.bio-card'));
-			var originalPosition = stickyWrapper.style.position;
-			var originalTop = stickyWrapper.style.top;
 
 			cards.forEach(function (card, index) {
 				if (index > 0) window.gsap.set(card, { yPercent: 100, opacity: 0 });
@@ -25,18 +22,10 @@
 				scrollTrigger: {
 					trigger: stack,
 					start: 'top top',
-					end: '+=3600',
+					end: function () { return '+=' + (window.innerHeight * 3); },
 					pin: true,
 					scrub: 0.8,
-					invalidateOnRefresh: true,
-					onLeave: function () {
-						stickyWrapper.style.position = 'relative';
-						stickyWrapper.style.top = 'auto';
-					},
-					onLeaveBack: function () {
-						stickyWrapper.style.position = originalPosition;
-						stickyWrapper.style.top = originalTop;
-					}
+					invalidateOnRefresh: true
 				}
 			});
 

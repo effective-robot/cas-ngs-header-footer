@@ -30,7 +30,6 @@
 		category: 'cas-ngs-biotech',
 		icon: 'images-alt2',
 		attributes: {
-			introTitle: { type: 'string', default: 'Scroll Down to Explore Our Core Disciplines' },
 			cards: { type: 'array', default: defaults },
 			fontFamily: { type: 'string', default: 'Plus Jakarta Sans' },
 			titleFontSize: { type: 'number', default: 2.4 },
@@ -77,7 +76,6 @@
 			return el('div', blockEditor.useBlockProps({ className: 'csh-editor-preview' }),
 				el(InspectorControls, null,
 					el(PanelBody, { title: 'Section and typography', initialOpen: true },
-						el(TextControl, { label: 'Intro heading', value: props.attributes.introTitle, onChange: function (value) { props.setAttributes({ introTitle: value }); } }),
 						el(SelectControl, { label: 'Font family', value: props.attributes.fontFamily, options: [
 							{ label: 'Plus Jakarta Sans', value: 'Plus Jakarta Sans' }, { label: 'Arial', value: 'Arial, sans-serif' },
 							{ label: 'Georgia', value: 'Georgia, serif' }, { label: 'Theme default', value: 'inherit' }
@@ -86,7 +84,7 @@
 						el(RangeControl, { label: 'Description size (rem)', value: props.attributes.descriptionFontSize, min: 0.6, max: 2, step: 0.02, onChange: function (value) { props.setAttributes({ descriptionFontSize: value }); } }),
 						el(RangeControl, { label: 'Tag size (rem)', value: props.attributes.tagFontSize, min: 0.5, max: 1.5, step: 0.05, onChange: function (value) { props.setAttributes({ tagFontSize: value }); } })
 					), panels),
-					el('strong', null, props.attributes.introTitle || 'Stacking Hero'),
+					el('strong', null, 'Stacking Hero'),
 					el('p', null, 'Four stacked cards. Edit section typography and each card in the block settings.')
 				);
 		},

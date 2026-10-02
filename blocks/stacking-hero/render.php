@@ -18,15 +18,11 @@ $font_family = isset( $attributes['fontFamily'] ) && in_array( $attributes['font
 $title_size = isset( $attributes['titleFontSize'] ) ? max( 1, min( 5, floatval( $attributes['titleFontSize'] ) ) ) : 2.4;
 $description_size = isset( $attributes['descriptionFontSize'] ) ? max( 0.6, min( 2, floatval( $attributes['descriptionFontSize'] ) ) ) : 0.98;
 $tag_size = isset( $attributes['tagFontSize'] ) ? max( 0.5, min( 1.5, floatval( $attributes['tagFontSize'] ) ) ) : 0.8;
-$intro_title = isset( $attributes['introTitle'] ) ? $attributes['introTitle'] : 'Scroll Down to Explore Our Core Disciplines';
 $plugin_url = cas_ngs_suite_url();
 $image_defaults = array( 'sunflower.png', 'human.jpg', 'khota.jpg', 'fungi-bacteria.png' );
 $card_classes = array( 'card-plants', 'card-humans', 'card-animals', 'card-microbes' );
 ?>
 <div class="csh-root wp-block-cas-ngs-stacking-hero" style="--csh-font-family: <?php echo esc_attr( $font_family ); ?>; --csh-title-size: <?php echo esc_attr( $title_size ); ?>rem; --csh-description-size: <?php echo esc_attr( $description_size ); ?>rem; --csh-tag-size: <?php echo esc_attr( $tag_size ); ?>rem;">
-	<div class="hero-spacer">
-		<h1><?php echo esc_html( $intro_title ); ?></h1>
-	</div>
 	<section class="stack-container">
 		<div class="card-sticky-wrapper">
 			<div class="cards-wrapper">
@@ -55,5 +51,4 @@ $card_classes = array( 'card-plants', 'card-humans', 'card-animals', 'card-micro
 			</div>
 		</div>
 	</section>
-	<div class="outro-spacer"></div>
 </div>
