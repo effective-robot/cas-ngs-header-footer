@@ -27,11 +27,10 @@
 				});
 
 				headerOffset = Math.ceil(headerBottom + 16);
-				var stageHeight = Math.max(240, window.innerHeight - headerOffset - 16);
-				var cardHeight = Math.max(100, Math.min(440, (stageHeight - 100) / 1.65));
+				var visibleStageHeight = Math.max(0, window.innerHeight - headerOffset);
+				var cardShift = Math.max(0, 506 - (visibleStageHeight / 2));
 				root.style.setProperty('--csh-header-offset', headerOffset + 'px');
-				root.style.setProperty('--csh-stage-height', stageHeight + 'px');
-				root.style.setProperty('--csh-card-height', cardHeight + 'px');
+				root.style.setProperty('--csh-card-shift', cardShift + 'px');
 			}
 
 			updateStageSize();
