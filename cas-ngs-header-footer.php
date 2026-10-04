@@ -3,7 +3,7 @@
  * Plugin Name: CAS-NGS Core Suite
  * Plugin URI:  https://example.com/cas-ngs
  * Description: Header, footer and biotech blocks in one plugin.
- * Version:     2.3.0
+ * Version:     2.3.1
  * Requires at least: 6.1
  * Requires PHP: 7.2
  * Author:      CAS-NGS
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'CAS_NGS_SUITE_VERSION' ) ) {
-	define( 'CAS_NGS_SUITE_VERSION', '2.3.0' );
+	define( 'CAS_NGS_SUITE_VERSION', '2.3.1' );
 }
 
 if ( ! defined( 'CAS_NGS_HF_VERSION' ) ) {

@@ -362,7 +362,11 @@
 
     var fallbackTimer = window.setTimeout(function () { if (!modelReady) buildFallbackDNA(); }, 5000);
     if (THREE.GLTFLoader) {
-      new THREE.GLTFLoader().load(modelUrl, function (gltf) {
+      var gltfLoader = new THREE.GLTFLoader();
+      if (window.MeshoptDecoder && typeof gltfLoader.setMeshoptDecoder === 'function') {
+        gltfLoader.setMeshoptDecoder(window.MeshoptDecoder);
+      }
+      gltfLoader.load(modelUrl, function (gltf) {
         if (modelReady) return;
         window.clearTimeout(fallbackTimer);
         var pivot = new THREE.Group();

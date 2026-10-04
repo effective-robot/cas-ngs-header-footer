@@ -253,6 +253,9 @@
       var loadModel = function () {
         if (typeof THREE.GLTFLoader === 'undefined') return;
         var loader = new THREE.GLTFLoader();
+        if (window.MeshoptDecoder && typeof loader.setMeshoptDecoder === 'function') {
+          loader.setMeshoptDecoder(window.MeshoptDecoder);
+        }
         loader.load(modelUrl, function (gltf) {
           var dnaScene = gltf.scene;
           var box = new THREE.Box3().setFromObject(dnaScene);

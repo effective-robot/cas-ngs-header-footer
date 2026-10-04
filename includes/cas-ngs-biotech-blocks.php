@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'CAS_BIO_BLOCKS_VERSION' ) ) {
-  define( 'CAS_BIO_BLOCKS_VERSION', '1.8.0' );
+  define( 'CAS_BIO_BLOCKS_VERSION', '1.8.1' );
 }
 if ( ! defined( 'CAS_BIO_BLOCKS_PATH' ) ) {
   define( 'CAS_BIO_BLOCKS_PATH', dirname( __DIR__ ) . '/' );
@@ -289,14 +289,30 @@ function cas_bio_enqueue_frontend_assets() {
   }
   wp_enqueue_script( 'three' );
 
+  if ( ! wp_script_is( 'cas-ngs-meshopt-decoder', 'registered' ) ) {
+    wp_register_script(
+      'cas-ngs-meshopt-decoder',
+      $three_ex . 'libs/meshopt_decoder.js',
+      array(),
+      'r128',
+      true
+    );
+  }
+  wp_enqueue_script( 'cas-ngs-meshopt-decoder' );
+
   // 6. Three.js Postprocessing Shaders & EffectComposer
   if ( ! wp_script_is( 'three-copy-shader', 'registered' ) ) {
     wp_register_script( 'three-copy-shader', $three_ex . 'shaders/CopyShader.js', array( 'three' ), 'r128', true );
   }
   wp_enqueue_script( 'three-copy-shader' );
 
+  if ( ! wp_script_is( 'three-pass', 'registered' ) ) {
+    wp_register_script( 'three-pass', $three_ex . 'postprocessing/Pass.js', array( 'three' ), 'r128', true );
+  }
+  wp_enqueue_script( 'three-pass' );
+
   if ( ! wp_script_is( 'three-shader-pass', 'registered' ) ) {
-    wp_register_script( 'three-shader-pass', $three_ex . 'postprocessing/ShaderPass.js', array( 'three' ), 'r128', true );
+    wp_register_script( 'three-shader-pass', $three_ex . 'postprocessing/ShaderPass.js', array( 'three', 'three-pass' ), 'r128', true );
   }
   wp_enqueue_script( 'three-shader-pass' );
 
@@ -304,7 +320,7 @@ function cas_bio_enqueue_frontend_assets() {
     wp_register_script(
       'three-effect-composer',
       $three_ex . 'postprocessing/EffectComposer.js',
-      array( 'three', 'three-copy-shader', 'three-shader-pass' ),
+      array( 'three', 'three-copy-shader', 'three-pass', 'three-shader-pass' ),
       'r128',
       true
     );
@@ -324,7 +340,7 @@ function cas_bio_enqueue_frontend_assets() {
 
   // 7. Three.js GLTFLoader
   if ( ! wp_script_is( 'three-gltf-loader', 'registered' ) ) {
-    wp_register_script( 'three-gltf-loader', $three_ex . 'loaders/GLTFLoader.js', array( 'three' ), 'r128', true );
+    wp_register_script( 'three-gltf-loader', $three_ex . 'loaders/GLTFLoader.js', array( 'three', 'cas-ngs-meshopt-decoder' ), 'r128', true );
   }
   wp_enqueue_script( 'three-gltf-loader' );
 
@@ -341,7 +357,9 @@ function cas_bio_enqueue_frontend_assets() {
       'gsap-scroll-trigger',
       'gsap-observer',
       'three',
+      'cas-ngs-meshopt-decoder',
       'three-copy-shader',
+      'three-pass',
       'three-shader-pass',
       'three-effect-composer',
       'three-render-pass',
@@ -443,7 +461,9 @@ function cas_bio_render_block_template( $block_slug, $attributes = array() ) {
   wp_enqueue_script( 'gsap-scroll-trigger' );
   wp_enqueue_script( 'gsap-observer' );
   wp_enqueue_script( 'three' );
+  wp_enqueue_script( 'cas-ngs-meshopt-decoder' );
   wp_enqueue_script( 'three-copy-shader' );
+  wp_enqueue_script( 'three-pass' );
   wp_enqueue_script( 'three-shader-pass' );
   wp_enqueue_script( 'three-effect-composer' );
   wp_enqueue_script( 'three-render-pass' );

@@ -3,6 +3,7 @@
   src: url('../../cas-logo/FontsFree-Net-Lastica.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 html.cas-splash-active,

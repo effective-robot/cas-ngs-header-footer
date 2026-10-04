@@ -7,8 +7,8 @@
  *   · dropdown submenus — hover-intent + click + keyboard + outside-close,
  *     with staggered link reveals
  *   · mobile drawer with accordion submenus (<768px)
- *   · ambient WebGL mote field inside the pill bar (Three.js r128 from cdnjs,
- *     loaded on demand; silently skipped if unavailable)
+ *   · ambient WebGL mote field inside the pill bar (uses the shared Three.js
+ *     r128 instance; silently skipped if unavailable)
  *   · scroll state: the bar tightens after 8px of scroll
  *
  * Footer (.cas-footer):
@@ -22,8 +22,6 @@
   "use strict";
 
   var VERSION = "1.0.0";
-  var THREE_URL = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-
   var C = {
     t1: "#865438",
     t2: "#af7853",
@@ -46,12 +44,7 @@
   }
 
   function ensureThree(cb) {
-    if (window.THREE) return cb();
-    var s = document.createElement("script");
-    s.src = window.CAS_THREE_URL || THREE_URL;
-    s.async = true;
-    s.onload = function () { if (window.THREE) cb(); };
-    document.head.appendChild(s);
+    if (window.THREE) cb();
   }
 
   /* ══════════════════════════════════════════════════════════════════════════
@@ -252,6 +245,7 @@
   /* ── ambient WebGL mote field inside the pill bar ────────────────────── */
   function initAmbient(canvas) {
     if (!canvas || canvas.dataset.casAmbient) return;
+    if (!window.THREE) return;
     canvas.dataset.casAmbient = "1";
     if (reducedMotion()) return;
 

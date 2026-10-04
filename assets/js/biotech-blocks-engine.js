@@ -583,6 +583,9 @@
         var fallbackTimer = window.setTimeout(function () { if (!modelReady) buildFallbackDNA(); }, 5000);
         if (THREE.GLTFLoader && modelUrl) {
           var gltfLoader = new THREE.GLTFLoader();
+          if (window.MeshoptDecoder && typeof gltfLoader.setMeshoptDecoder === 'function') {
+            gltfLoader.setMeshoptDecoder(window.MeshoptDecoder);
+          }
           gltfLoader.load(modelUrl, function (gltf) {
             if (modelReady) return;
             window.clearTimeout(fallbackTimer);
@@ -1637,6 +1640,9 @@
           if (typeof THREE.GLTFLoader === 'undefined') return;
 
           var loader = new THREE.GLTFLoader();
+          if (window.MeshoptDecoder && typeof loader.setMeshoptDecoder === 'function') {
+            loader.setMeshoptDecoder(window.MeshoptDecoder);
+          }
           loader.load(
             modelUrl,
             function (gltf) {
