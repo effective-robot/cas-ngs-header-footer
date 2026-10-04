@@ -312,6 +312,43 @@ function cas_bio_enqueue_feature_assets( $features ) {
   }
 }
 
+function cas_bio_enqueue_rendered_block_assets( $block_content, $block ) {
+  if ( is_admin() || wp_doing_ajax() ) {
+    return $block_content;
+  }
+
+  $name = isset( $block['blockName'] ) ? $block['blockName'] : '';
+  if ( 0 !== strpos( $name, 'cas-ngs/' ) ) {
+    return $block_content;
+  }
+
+  $core_blocks = array(
+    'cas-ngs/header-top-dock',
+    'cas-ngs/act1-hero-sequencer',
+    'cas-ngs/act2-bento-grid',
+    'cas-ngs/act3-process-timeline',
+    'cas-ngs/act4-cta-banner',
+  );
+  $animation_blocks = array(
+    'cas-ngs/act1-hero-sequencer',
+    'cas-ngs/act2-bento-grid',
+    'cas-ngs/act3-process-timeline',
+    'cas-ngs/act4-cta-banner',
+  );
+
+  cas_bio_enqueue_feature_assets(
+    array(
+      'core'       => in_array( $name, $core_blocks, true ),
+      'animations' => in_array( $name, $animation_blocks, true ),
+      'dna'        => 'cas-ngs/dna-background' === $name,
+      'corridor'   => 'cas-ngs/corridor-hero-3d' === $name,
+    )
+  );
+
+  return $block_content;
+}
+add_filter( 'render_block', 'cas_bio_enqueue_rendered_block_assets', 10, 2 );
+
 /**
  * Register + enqueue shared bundles; feature runtimes are enqueued on demand.
  */

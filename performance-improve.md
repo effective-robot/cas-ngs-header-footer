@@ -45,7 +45,7 @@ The report records both the unversioned `three.min.js` and the plugin's `three.m
 
 The report also shows 767 DOM elements and CLS 0, so excessive DOM size/layout shift is not currently a leading bottleneck. The console's Meshopt SIMD message is a decoder capability warning, not a load exception; the missing-decoder exception is gone. Chrome `[Violation]` entries are timing warnings, not thrown errors.
 
-### Confirmed Plugin Findings
+### Confirmed Plugin Findings (Before Step 2)
 
 - `cas_ngs_suite_front_assets()` enqueues header/footer CSS and JavaScript, plus Google Fonts, on every frontend page. The splash markup, stylesheet, and script are also installed globally, and the splash CSS hides the rest of the body while the animation is active.
 - `cas_bio_enqueue_frontend_assets()` enqueues the shared biotech CSS/engine, GSAP plugins, Three.js, GLTFLoader, postprocessing files, the DNA enhancer, and the corridor stylesheet/engine on every frontend page. The client engines may be inert without their markup, but the network and parse costs are not.
@@ -88,7 +88,7 @@ The homepage composition is understood: the site-wide header and one-time splash
 
 ### Step 1 completion gate
 
-The plugin-owned uncaught exceptions are gone, and the compressed model loads. PHP and JavaScript syntax checks pass. The latest console has no uncaught plugin error, but Step 1 is not fully clear until the external site-head Three.js tag is removed: the newest report still sees both it and the plugin's registered library. Then confirm the duplicate-instance warning clears. This is manual console/source verification, not another Lighthouse run.
+Step 1 is closed as requested: the plugin-owned uncaught exceptions and compressed-model decoder error were fixed. The unversioned Three.js tag found in the live site head is external to the plugin; removing it is recommended to avoid a duplicate transfer, but it does not block Step 2.
 
 ### Console items that are not exceptions
 
@@ -97,6 +97,18 @@ Chrome's `[Violation]` entries identify slow work rather than thrown errors. The
 ## Step 2: Consolidate And Professionally Refactor
 
 **After Step 1 is confirmed working. Preserve the existing block output and behavior while reducing duplicated code and conflicting ownership.**
+
+### Implemented In This Pass
+
+- Removed the unused interactive pipeline block, renderer, editor registration, CSS, engine, shortcodes, and admin diagnostics.
+- Added `assets/js/three-asset-cache.js`; DNA and corridor consumers share one URL-keyed fetch/parse and receive separate scene clones.
+- Made the DNA runtime standalone instead of overriding a second initializer. Removed its unused section-anchor scan and associated `offsetHeight` reads.
+- Paused the DNA ScrollTrigger and WebGL loop while the corridor covers it. The corridor render loop now stops offscreen and in hidden tabs.
+- Cached corridor card bounds outside pointermove handlers; changed the top-dock RAF to run only while its spring moves; changed waveform animation from layout-triggering height changes to transforms and pause it offscreen/reduced-motion.
+- Scoped the biotech runtime and Three.js decoder/GLTF/postprocessing assets to blocks, shortcodes, and DNA meta that need them. Kept the Three.js core for the site-wide header canvas.
+- Centralized shared palette tokens and the Plus Jakarta Sans font request.
+
+Static PHP/JavaScript checks pass, and a focused cache harness confirms one model request produces independent scene clones. A WordPress staging check is still needed for visual/scroll behavior; no Lighthouse run has been made.
 
 ### Work
 
@@ -136,4 +148,4 @@ This plan focuses on the plugin and its direct integrations. Lighthouse also ide
 
 ## Next Step
 
-Complete Phase 0's placement inventory and repeatable baseline on staging. Then implement Phase 1 only, verify first-screen visibility and splash behavior, and proceed to Phase 2 after that checkpoint passes.
+Activate this Step 2 build on staging and verify the homepage scenes, corridor-to-DNA pause/resume, block/shortcode/template rendering, and pages without 3D. Run Lighthouse only after the site owner accepts Step 2.

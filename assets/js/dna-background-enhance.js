@@ -126,6 +126,7 @@
       var cyclingWired = false;
       var dnaScrollTrigger = null;
       var corridorActive = false;
+      var modelLoaded = false;
 
       var wireCycling = function () {
         if (cyclingWired) return;
@@ -206,6 +207,8 @@
           });
           dnaMeshGroup.add(dnaScene);
           wireCycling();
+          modelLoaded = true;
+          startRenderLoop();
         }).catch(function (err) {
           if (window.console && console.warn) console.warn('CAS-NGS DNA background: model load error', err);
         });
@@ -216,10 +219,15 @@
       var frameId = 0;
       function renderLoop() {
         frameId = 0;
-        if (document.hidden || corridorActive) return;
+        if (!modelLoaded || document.hidden || corridorActive) return;
         dnaMeshGroup.rotation.y += 0.0012;
         renderer.render(scene, camera);
         frameId = requestAnimationFrame(renderLoop);
+      }
+      function startRenderLoop() {
+        if (modelLoaded && !document.hidden && !corridorActive && !frameId) {
+          frameId = requestAnimationFrame(renderLoop);
+        }
       }
       function setCorridorActive(active) {
         if (corridorActive === active) return;
@@ -230,7 +238,7 @@
           frameId = 0;
         } else {
           if (dnaScrollTrigger) dnaScrollTrigger.enable(false, false);
-          if (!document.hidden && !frameId) frameId = requestAnimationFrame(renderLoop);
+          startRenderLoop();
         }
       }
       window.addEventListener('cas-ngs:corridor-visibility', function (event) {
@@ -240,11 +248,11 @@
         if (document.hidden) {
           if (frameId) cancelAnimationFrame(frameId);
           frameId = 0;
-        } else if (!corridorActive && !frameId) {
-          frameId = requestAnimationFrame(renderLoop);
+        } else {
+          startRenderLoop();
         }
       });
-      if (!document.hidden) frameId = requestAnimationFrame(renderLoop);
+      startRenderLoop();
 
       window.addEventListener('resize', function () {
         var newW = window.innerWidth;
