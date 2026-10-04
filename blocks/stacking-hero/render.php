@@ -20,7 +20,7 @@ $description_size = isset( $attributes['descriptionFontSize'] ) ? max( 0.6, min(
 $tag_size = isset( $attributes['tagFontSize'] ) ? max( 0.5, min( 1.5, floatval( $attributes['tagFontSize'] ) ) ) : 0.8;
 $intro_title = isset( $attributes['introTitle'] ) ? $attributes['introTitle'] : 'Scroll Down to Explore Our Core Disciplines';
 $plugin_url = cas_ngs_suite_url();
-$image_defaults = array( 'sunflower.png', 'human.jpg', 'khota.jpg', 'fungi-bacteria.png' );
+$image_defaults = array( 'sunflower.webp', 'human.webp', 'khota.webp', 'fungi-bacteria.webp' );
 $card_classes = array( 'card-plants', 'card-humans', 'card-animals', 'card-microbes' );
 ?>
 <div class="csh-root wp-block-cas-ngs-stacking-hero" style="--csh-font-family: <?php echo esc_attr( $font_family ); ?>; --csh-title-size: <?php echo esc_attr( $title_size ); ?>rem; --csh-description-size: <?php echo esc_attr( $description_size ); ?>rem; --csh-tag-size: <?php echo esc_attr( $tag_size ); ?>rem;">
