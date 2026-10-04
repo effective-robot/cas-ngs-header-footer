@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
+cas_bio_enqueue_feature_assets( array( 'core' => false, 'dna' => true, 'corridor' => false ) );
+
 $uid = wp_unique_id( 'cas-dna-bg-' );
 
 $post_id = get_the_ID();

@@ -3,7 +3,7 @@
  * Plugin Name: CAS-NGS Core Suite
  * Plugin URI:  https://example.com/cas-ngs
  * Description: Header, footer and biotech blocks in one plugin.
- * Version:     2.3.1
+ * Version:     2.3.2
  * Requires at least: 6.1
  * Requires PHP: 7.2
  * Author:      CAS-NGS
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'CAS_NGS_SUITE_VERSION' ) ) {
-	define( 'CAS_NGS_SUITE_VERSION', '2.3.1' );
+	define( 'CAS_NGS_SUITE_VERSION', '2.3.2' );
 }
 
 if ( ! defined( 'CAS_NGS_HF_VERSION' ) ) {
@@ -64,7 +64,7 @@ function cas_ngs_stacking_hero_register_assets() {
 	wp_register_style(
 		'cas-ngs-stacking-hero-style',
 		cas_ngs_suite_url() . 'assets/css/stacking-hero.css',
-		array(),
+		array( 'cas-ngs-hf-fonts' ),
 		CAS_NGS_SUITE_VERSION
 	);
 }
@@ -157,7 +157,7 @@ function cas_ngs_splash_markup() {
 }
 add_action( 'wp_body_open', 'cas_ngs_splash_markup', 1 );
 
-// Biotech blocks bootstrap (Acts 0-4 + DNA background + pipeline hero).
+// Biotech blocks bootstrap (header dock, DNA background, Acts 1-4, corridor).
 // Registers those blocks, their editor script, the GSAP + Three.js asset
 // pipeline and their shortcodes. It does NOT auto-inject anything.
 require_once plugin_dir_path( __FILE__ )
@@ -292,7 +292,6 @@ function cas_ngs_suite_admin_debug_notice() {
 		'blocks/act4-cta-banner/render.php'           => 'Act 4 render',
 		'blocks/dna-background/render.php'            => 'DNA background',
 		'blocks/header-top-dock/render.php'           => 'Top dock render',
-		'blocks/interactive-pipeline-hero/render.php' => 'Pipeline hero',
 		'assets/css/biotech-blocks.css'               => 'Biotech CSS',
 		'assets/js/biotech-blocks-editor.js'          => 'Editor scripts',
 		'assets/js/biotech-blocks-engine.js'          => 'Front engine',
@@ -335,7 +334,6 @@ function cas_ngs_suite_admin_debug_notice() {
 	$registry        = WP_Block_Type_Registry::get_instance();
 	$expected_blocks = array(
 		'cas-ngs/header-top-dock',
-		'cas-ngs/interactive-pipeline-hero',
 		'cas-ngs/dna-background',
 		'cas-ngs/act1-hero-sequencer',
 		'cas-ngs/act2-bento-grid',
@@ -716,17 +714,25 @@ function cas_ngs_suite_block_category( $categories ) {
 }
 add_filter( 'block_categories_all', 'cas_ngs_suite_block_category', 10, 1 );
 
-// Register the style handle early (on init) so it is reliably available
-// to the editor when it collects block editor styles.
+function cas_ngs_suite_fonts_url() {
+	return 'https://fonts.googleapis.com/css2'
+		. '?family=Lexend:wght@200;300;400;500;600;700'
+		. '&family=IBM+Plex+Mono:wght@400;500;600'
+		. '&family=Plus+Jakarta+Sans:wght@400;500;600;700;800'
+		. '&display=swap';
+}
+
+// Register shared styles/fonts before block metadata resolves their handles.
 function cas_ngs_suite_register_styles_early() {
+	wp_register_style( 'cas-ngs-hf-fonts', cas_ngs_suite_fonts_url(), array(), null );
 	wp_register_style(
 		'cas-ngs-hf-front',
 		cas_ngs_suite_url() . 'assets/header-footer.css',
-		array(),
+		array( 'cas-ngs-hf-fonts' ),
 		CAS_NGS_SUITE_VERSION
 	);
 }
-add_action( 'init', 'cas_ngs_suite_register_styles_early', 5 );
+add_action( 'init', 'cas_ngs_suite_register_styles_early', 3 );
 
 function cas_ngs_suite_register_blocks() {
 	if ( ! function_exists( 'register_block_type' ) ) {
@@ -822,12 +828,7 @@ function cas_ngs_footer() {
 function cas_ngs_suite_front_assets() {
 	$base = cas_ngs_suite_url();
 
-	wp_enqueue_style(
-		'cas-ngs-hf-front',
-		$base . 'assets/header-footer.css',
-		array(),
-		CAS_NGS_SUITE_VERSION
-	);
+	wp_enqueue_style( 'cas-ngs-hf-front' );
 	wp_enqueue_script(
 		'cas-ngs-hf-engine',
 		$base . 'assets/header-footer.js',
@@ -836,12 +837,6 @@ function cas_ngs_suite_front_assets() {
 		true
 	);
 
-	// Design faces; dequeue 'cas-ngs-hf-fonts' if your theme loads them.
-	$fonts_url = 'https://fonts.googleapis.com/css2'
-		. '?family=Lexend:wght@200;300;400;500;600;700'
-		. '&family=IBM+Plex+Mono:wght@400;500;600'
-		. '&display=swap';
-	wp_enqueue_style( 'cas-ngs-hf-fonts', $fonts_url, array(), null );
 }
 add_action( 'wp_enqueue_scripts', 'cas_ngs_suite_front_assets' );
 
@@ -862,11 +857,6 @@ function cas_ngs_suite_editor_assets() {
 		true
 	);
 	wp_localize_script( 'cas-ngs-block', 'casNgHeaderAccountMenu', cas_ngs_header_account_menu_data() );
-	wp_enqueue_style(
-		'cas-ngs-hf-front',
-		$base . 'assets/header-footer.css',
-		array(),
-		CAS_NGS_SUITE_VERSION
-	);
+	wp_enqueue_style( 'cas-ngs-hf-front' );
 }
 add_action( 'enqueue_block_editor_assets', 'cas_ngs_suite_editor_assets' );

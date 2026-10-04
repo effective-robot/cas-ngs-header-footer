@@ -361,18 +361,14 @@
     }
 
     var fallbackTimer = window.setTimeout(function () { if (!modelReady) buildFallbackDNA(); }, 5000);
-    if (THREE.GLTFLoader) {
-      var gltfLoader = new THREE.GLTFLoader();
-      if (window.MeshoptDecoder && typeof gltfLoader.setMeshoptDecoder === 'function') {
-        gltfLoader.setMeshoptDecoder(window.MeshoptDecoder);
-      }
-      gltfLoader.load(modelUrl, function (gltf) {
+    if (window.CAS_NGS_AssetCache && typeof window.CAS_NGS_AssetCache.loadGLTF === 'function') {
+      window.CAS_NGS_AssetCache.loadGLTF(modelUrl).then(function (gltf) {
         if (modelReady) return;
         window.clearTimeout(fallbackTimer);
         var pivot = new THREE.Group();
         pivot.add(gltf.scene);
         onModelReady(pivot);
-      }, undefined, function () {
+      }).catch(function () {
         if (!modelReady) { window.clearTimeout(fallbackTimer); buildFallbackDNA(); }
       });
     } else {
@@ -618,6 +614,18 @@
     var isAnimating = false;
     var currentSec = -1;
     var reducedUI = window.innerWidth <= 960;
+    var stageActive = false;
+    var tiltBounds = [];
+
+    function cacheTiltBounds(index) {
+      var rect = anchors[index].getBoundingClientRect();
+      tiltBounds[index] = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height
+      };
+    }
 
     function restPose(i) {
       var pos = anchors[i] ? anchors[i].getAttribute('data-pos') : 'left';
@@ -640,7 +648,12 @@
           gsap.to(el, {
             xPercent: rp.xPercent, yPercent: rp.yPercent, x: rp.x, y: rp.y, scale: rp.scale,
             autoAlpha: 1, duration: 0.8, ease: 'power3.out', overwrite: 'auto',
-            onComplete: (function (cd) { return function () { if (cd) cd.classList.add('is-floating'); }; })(card)
+            onComplete: (function (cd, index) {
+              return function () {
+                if (cd) cd.classList.add('is-floating');
+                cacheTiltBounds(index);
+              };
+            })(card, c)
           });
         } else {
           if (card) card.classList.remove('is-floating');
@@ -663,8 +676,12 @@
         ry: gsap.quickTo(inner, 'rotationY', { duration: 0.4, ease: 'power2.out' }),
         z: gsap.quickTo(inner, 'z', { duration: 0.4, ease: 'power2.out' })
       };
+      anchor.addEventListener('pointerenter', function () {
+        cacheTiltBounds(ci);
+      });
       anchor.addEventListener('pointermove', function (e) {
-        var r = anchor.getBoundingClientRect();
+        var r = tiltBounds[ci];
+        if (!r || !r.width || !r.height) return;
         var nx = (e.clientX - r.left) / r.width - 0.5;
         var ny = (e.clientY - r.top) / r.height - 0.5;
         tiltSetters[ci].rx(-ny * 12);
@@ -715,11 +732,10 @@
         if (!p) p = oldest;
         if (!p) return;
         glyphIdx = (glyphIdx + 1) & 3;
-        var stageRect = stage.getBoundingClientRect();
         p.alive = true;
-        p.baseX = ptrX - stageRect.left + (rnd() - 0.5) * 10;
+        p.baseX = ptrX + (rnd() - 0.5) * 10;
         p.x = p.baseX;
-        p.y = ptrY - stageRect.top + (rnd() - 0.5) * 8;
+        p.y = ptrY + (rnd() - 0.5) * 8;
         p.char = 'ATCG'[glyphIdx];
         p.color = glyphCss[glyphIdx & 1];
         p.size = 12 + rnd() * 4;
@@ -732,9 +748,7 @@
       }
       window.addEventListener('pointermove', function (e) {
         ptrX = e.clientX; ptrY = e.clientY;
-        if (!fxEnabled || reduced) return;
-        var rect = stage.getBoundingClientRect();
-        if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+        if (!fxEnabled || reduced || !stageActive) return;
         var now = performance.now();
         var dx = ptrX - lastPX, dy = ptrY - lastPY;
         var dist = Math.sqrt(dx * dx + dy * dy);
@@ -912,6 +926,7 @@
       if (!isAnimating) {
         setObserver(!passed && inPinZone());
       }
+      syncFrameLoop();
     }, { passive: true });
 
     dots.forEach(function (dot) {
@@ -948,11 +963,13 @@
           glideToStation(clamp(Math.round(scrollP() * 3), 0, 3));
         }
         setCardStation(clamp(Math.round(state.p * 3), 0, 3));
+        syncFrameLoop();
       }, 180);
     });
 
     document.addEventListener('visibilitychange', function () {
       state.running = !document.hidden;
+      syncFrameLoop();
     });
 
     /* ── HUD update ────────────────────────────────────────────── */
@@ -982,10 +999,26 @@
     var clock = new THREE.Clock();
     var m4 = new THREE.Matrix4(), qt = new THREE.Quaternion(),
       sc = new THREE.Vector3(), posV = new THREE.Vector3();
+    var frameId = 0;
+
+    function isNearViewport() {
+      var y = window.scrollY;
+      return y <= wrapTop + travel + vh * 1.5 && y + vh >= wrapTop - vh * 0.5;
+    }
+
+    function syncFrameLoop() {
+      if (state.running && !document.hidden && isNearViewport()) {
+        if (!frameId) frameId = requestAnimationFrame(frame);
+      } else if (frameId) {
+        cancelAnimationFrame(frameId);
+        frameId = 0;
+        clock.getDelta();
+      }
+    }
 
     function frame() {
-      requestAnimationFrame(frame);
-      if (!state.running) { clock.getDelta(); return; }
+      frameId = 0;
+      if (!state.running || document.hidden) { clock.getDelta(); return; }
 
       /* skip work entirely when the block is far offscreen */
       var y = window.scrollY;
@@ -1012,6 +1045,13 @@
       } else {
         stageY = -exitT * 100;            /* pinned, then flying out upward   */
         stageOp = 1 - exitT;
+      }
+      var nextStageActive = stageOp > 0.02;
+      if (nextStageActive !== stageActive) {
+        stageActive = nextStageActive;
+        window.dispatchEvent(new CustomEvent('cas-ngs:corridor-visibility', {
+          detail: { active: stageActive }
+        }));
       }
       stage.style.transform = 'translate3d(0,' + stageY.toFixed(3) + '%,0)';
       stage.style.opacity = stageOp.toFixed(3);
@@ -1110,13 +1150,14 @@
       updateDrawGlyphs(dt);
       if (composer) composer.render();
       else renderer.render(scene, camera);
+      frameId = requestAnimationFrame(frame);
     }
 
     /* ── ignition (no splash: Frame 1 renders immediately) ─────── */
     rainMat.uniforms.uAtlas.value = texAtlas;
     setCardStation(0);
     currentSec = 0;
-    frame();
+    syncFrameLoop();
   }
 
   function bootAll() {

@@ -522,7 +522,6 @@ cas-ngs-header-footer/
     ├── act4-cta-banner/                   (repo — untouched)
     ├── dna-background/                    (repo — untouched)
     ├── header-top-dock/                   (repo — untouched)
-    ├── interactive-pipeline-hero/         (repo — untouched)
     └── 3d-corridor-hero/                  (NEW)
         ├── block.json
         └── render.php

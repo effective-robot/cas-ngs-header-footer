@@ -129,17 +129,15 @@ Compare screenshots at the same scroll positions and record video on the same de
 
 Visual quality is acceptable on agreed devices; optimized assets are reproducible and reversible.
 
-## Phase 6: Remove Legacy Code Only After the Site Audit
+## Phase 6: Remove Confirmed-Unused Features
 
-The two blocks you report not using are `cas-ngs/header-top-dock` (“Act 0: Animated Top Dock Header”) and `cas-ngs/interactive-pipeline-hero` (“Act 0: Interactive 3D Pipeline Hero”). Their code is in `blocks/header-top-dock/` and `blocks/interactive-pipeline-hero/`; registration and shared runtime code are in `includes/cas-ngs-biotech-blocks.php` and `assets/js/biotech-blocks-engine.js`.
+The unused `cas-ngs/interactive-pipeline-hero` block has been removed from this plugin after the site owner confirmed it is not used. Its renderer, editor registration, frontend engine, CSS, registration, and shortcode aliases are no longer shipped. Do not restore this feature unless a site placement is intentionally reintroduced and reviewed.
 
-For now, their inserter entries are disabled without removing registration, rendering, or shortcodes. This prevents accidentally adding new instances while preserving saved content and legacy shortcode support. Before deleting renderers, editor implementations, shortcode aliases, or runtime features, search all Pages/Posts, Site Editor templates/template parts/patterns, and code snippets for block names and shortcode aliases. Check staging. If any are found, keep support until those placements are intentionally migrated and verified.
-
-The editor bundle and `block.js` are loaded through editor-only WordPress hooks; they are not the public frontend runtime. We will not remove them as a visitor-speed fix unless an editor issue is demonstrated.
+The editor bundles remain editor-only and are not visitor frontend runtimes. Before removing any other block or shortcode, verify its usage in pages, Site Editor templates/template parts/patterns, and code snippets.
 
 ### Checkpoint
 
-No saved page/template loses content. Only confirmed-unused implementation is removed, and legacy content is removed only after you approve the inventory.
+Only explicitly confirmed-unused feature code is removed; active homepage sections and saved content remain supported.
 
 ## Final Acceptance Checks
 

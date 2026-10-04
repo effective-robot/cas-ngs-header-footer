@@ -22,12 +22,16 @@
   "use strict";
 
   var VERSION = "1.0.0";
+  var rootStyles = window.getComputedStyle(document.documentElement);
+  function colorToken(name, fallback) {
+    return rootStyles.getPropertyValue(name).trim() || fallback;
+  }
   var C = {
-    t1: "#865438",
-    t2: "#af7853",
-    t3: "#d4996e",
-    t4: "#e6ccb2",
-    t5: "#ede0d4"
+    t1: colorToken("--sylva-t1", "#865438"),
+    t2: colorToken("--sylva-t2", "#af7853"),
+    t3: colorToken("--sylva-t3", "#d4996e"),
+    t4: colorToken("--sylva-t4", "#e6ccb2"),
+    t5: colorToken("--sylva-t5", "#ede0d4")
   };
 
   function debugOn() {

@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
+cas_bio_enqueue_feature_assets( array( 'core' => false, 'dna' => false, 'corridor' => true ) );
+
 $cor3d_defaults = array(
   'station1_kicker'     => 'STEP 01 // SPECIMEN PREPARATION',
   'station1_title'      => 'Sample Extraction',

@@ -1,9 +1,8 @@
 /**
- * DNA Background Enhancer — cas-ngs/dna-background
+ * DNA Background Runtime — cas-ngs/dna-background
  *
- * Replaces the stock `initDnaBackground` in biotech-blocks-engine.js with an
- * enhanced version that fixes two reported issues WITHOUT touching the rest
- * of the engine (header dock, waveforms, corridor, etc. all keep running):
+ * Owns the frontend runtime for cas-ngs/dna-background. Header dock,
+ * waveforms, corridor, and other block behavior remain in their own engines.
  *
  *   1. OFF-CENTER / SQUISHED DNA WHEN ADDED AS A BLOCK
  *      The block renders its `position:fixed` wrapper inline inside the post
@@ -14,18 +13,16 @@
  *      body level, which is why it looked perfect. Fix: relocate the wrapper
  *      to document.body before initializing so `fixed` is viewport-relative.
  *
- *   2. DNA FREEZES AFTER 3-4 SECTIONS
- *      The stock engine only builds pose transitions for the sections it can
- *      detect, so once you scroll past those the helix goes still. Fix:
- *      broaden section discovery to every top-level content section/block and
- *      keep cycling the pose list with modulo, so the helix keeps changing
- *      pose for every section on the page, indefinitely.
+ *   2. AVOID OVERLAPPING WORK WITH THE CORRIDOR
+ *      Use one document scroll trigger for DNA poses, suspend that trigger
+ *      while the corridor covers the background, and pause WebGL rendering
+ *      until the corridor releases.
  *
- * Loaded AFTER biotech-blocks-engine.js (declared as a dependency) and before
- * DOMContentLoaded, so it overrides the method before `init()` invokes it.
+ * Loaded after biotech-blocks-engine.js so the shared scene/model utilities
+ * are available before this initializer runs.
  *
  * @package CAS_NGS_Biotech_Blocks
- * @version 1.8.0
+ * @version 1.8.2
  */
 (function () {
   'use strict';
@@ -127,6 +124,8 @@
       var accentMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(accentColor), roughness: 0.40, metalness: 0.20, transparent: true, opacity: 0.90 });
 
       var cyclingWired = false;
+      var dnaScrollTrigger = null;
+      var corridorActive = false;
 
       var wireCycling = function () {
         if (cyclingWired) return;
@@ -138,39 +137,8 @@
 
         var poseCount = forwardCyclePoses.length;
 
-        /* Discover the content sections that drive the pose cycle.
-           Prefer the theme's own section classes (these drove the original
-           animation); only fall back to top-level blocks if too few are
-           found. Keeping the specific list separate prevents a broad
-           container (e.g. a group block) from swallowing the act sections
-           via the nested-filter and collapsing the list to <2 entries. */
-        var specificSelectors = [
-          '.cas-act-1', '.cas-act-2', '.cas-act-3', '.cas-act-4', '.cas-act-section',
-          '.sylva-hero', '.sylva-footer'
-        ];
-        var broadSelectors = [
-          'main > section', 'main > .wp-block',
-          '#primary-content > section', '#primary-content > .wp-block', '#primary-content > div',
-          '.entry-content > section', '.entry-content > .wp-block',
-          '.wp-site-blocks > section', '.wp-site-blocks > .wp-block'
-        ];
-        function collectSections(list) {
-          var raw = document.querySelectorAll(list.join(','));
-          var result = [];
-          raw.forEach(function (sec) {
-            if (sec.classList.contains('cas-dna-bg-wrapper') || sec.hasAttribute('data-cas-dna-bg')) return;
-            if (sec.offsetHeight < 120) return;
-            var isNested = result.some(function (p) { return p.contains(sec); });
-            if (!isNested) result.push(sec);
-          });
-          return result;
-        }
-        var sections = collectSections(specificSelectors);
-        if (sections.length < 2) sections = collectSections(broadSelectors);
-        if (sections.length < 2) sections = collectSections(specificSelectors.concat(broadSelectors));
-
         function buildDocumentScrollCycle() {
-          ScrollTrigger.create({
+          dnaScrollTrigger = ScrollTrigger.create({
             trigger: document.body,
             start: 'top top',
             end: 'bottom bottom',
@@ -206,42 +174,7 @@
               camera.position.z = A.camZ + (B.camZ - A.camZ) * eased;
             }
           });
-        }
-
-        /* Default behavior: animate from full-page scroll, not from specific act blocks.
-           Section anchors can still be used as an explicit opt-in if desired, but they are
-           never required for the DNA background to keep moving on any page. */
-        var useSectionAnchors = !!(window.casBioBlocksData && window.casBioBlocksData.dnaBackgroundUseSectionAnchors);
-        if (useSectionAnchors && sections.length >= 2) {
-          for (var i = 0; i < sections.length - 1; i++) {
-            var currentSec = sections[i];
-            var nextSec = sections[i + 1];
-            var targetStep = i + 1;
-            var poseIdx = targetStep % poseCount;
-            var cycle = Math.floor(targetStep / poseCount);
-            var targetPose = forwardCyclePoses[poseIdx];
-            var yAccum = (cycle * 2 * Math.PI);
-            var isLastTransition = (i === sections.length - 2);
-            gsap.timeline({
-              scrollTrigger: {
-                trigger: currentSec,
-                start: 'top top',
-                endTrigger: nextSec,
-                end: isLastTransition ? 'bottom bottom' : 'top top',
-                scrub: 1.8,
-                invalidateOnRefresh: true
-              }
-            })
-            .to(modelPivot.rotation, { x: targetPose.rot.x, y: targetPose.rot.y + yAccum, z: targetPose.rot.z, ease: 'power1.inOut' }, 0)
-            .to(modelPivot.position, { x: (targetPose.pos.x * mobilePos) + offsetX, y: targetPose.pos.y + offsetY, z: targetPose.pos.z, ease: 'power1.inOut' }, 0)
-            .to(modelPivot.scale, {
-              x: targetPose.scale.x * scaleMultiplier * mobileScale,
-              y: targetPose.scale.y * scaleMultiplier * mobileScale,
-              z: targetPose.scale.z * scaleMultiplier * mobileScale,
-              ease: 'power1.inOut'
-            }, 0)
-            .to(camera.position, { z: targetPose.camZ, ease: 'power1.inOut' }, 0);
-          }
+          if (corridorActive) dnaScrollTrigger.disable(false);
         }
 
         buildDocumentScrollCycle();
@@ -251,12 +184,8 @@
       };
 
       var loadModel = function () {
-        if (typeof THREE.GLTFLoader === 'undefined') return;
-        var loader = new THREE.GLTFLoader();
-        if (window.MeshoptDecoder && typeof loader.setMeshoptDecoder === 'function') {
-          loader.setMeshoptDecoder(window.MeshoptDecoder);
-        }
-        loader.load(modelUrl, function (gltf) {
+        if (!window.CAS_NGS_AssetCache || typeof window.CAS_NGS_AssetCache.loadGLTF !== 'function') return;
+        window.CAS_NGS_AssetCache.loadGLTF(modelUrl).then(function (gltf) {
           var dnaScene = gltf.scene;
           var box = new THREE.Box3().setFromObject(dnaScene);
           var center = box.getCenter(new THREE.Vector3());
@@ -277,28 +206,45 @@
           });
           dnaMeshGroup.add(dnaScene);
           wireCycling();
-        }, undefined, function (err) {
+        }).catch(function (err) {
           if (window.console && console.warn) console.warn('CAS-NGS DNA background: model load error', err);
         });
       };
 
-      if (typeof THREE.GLTFLoader !== 'undefined') {
-        loadModel();
-      } else {
-        var retries = 0;
-        var checkLoader = setInterval(function () {
-          retries++;
-          if (typeof THREE.GLTFLoader !== 'undefined') { clearInterval(checkLoader); loadModel(); }
-          else if (retries > 35) { clearInterval(checkLoader); }
-        }, 100);
-      }
+      loadModel();
 
+      var frameId = 0;
       function renderLoop() {
-        requestAnimationFrame(renderLoop);
+        frameId = 0;
+        if (document.hidden || corridorActive) return;
         dnaMeshGroup.rotation.y += 0.0012;
         renderer.render(scene, camera);
+        frameId = requestAnimationFrame(renderLoop);
       }
-      renderLoop();
+      function setCorridorActive(active) {
+        if (corridorActive === active) return;
+        corridorActive = active;
+        if (corridorActive) {
+          if (dnaScrollTrigger) dnaScrollTrigger.disable(false);
+          if (frameId) cancelAnimationFrame(frameId);
+          frameId = 0;
+        } else {
+          if (dnaScrollTrigger) dnaScrollTrigger.enable(false, false);
+          if (!document.hidden && !frameId) frameId = requestAnimationFrame(renderLoop);
+        }
+      }
+      window.addEventListener('cas-ngs:corridor-visibility', function (event) {
+        setCorridorActive(!!(event.detail && event.detail.active));
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (frameId) cancelAnimationFrame(frameId);
+          frameId = 0;
+        } else if (!corridorActive && !frameId) {
+          frameId = requestAnimationFrame(renderLoop);
+        }
+      });
+      if (!document.hidden) frameId = requestAnimationFrame(renderLoop);
 
       window.addEventListener('resize', function () {
         var newW = window.innerWidth;
@@ -311,20 +257,9 @@
     });
   }
 
-  /* Override the stock method before init() runs. The engine defers init()
-     to DOMContentLoaded when loaded in the footer, and this script is enqueued
-     right after it, so the override is in place in time. If the engine has
-     already invoked init() before this script parsed (rare late-load case),
-     the stock DNA background simply runs un-enhanced — never a duplicate. */
-  function installOverride() {
-    if (window.CAS_NGS_BiotechBlocks) {
-      window.CAS_NGS_BiotechBlocks.initDnaBackground = enhancedInitDnaBackground;
-      return true;
-    }
-    return false;
-  }
-
-  if (!installOverride() && document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', installOverride, { once: true });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enhancedInitDnaBackground, { once: true });
+  } else {
+    enhancedInitDnaBackground();
   }
 })();
