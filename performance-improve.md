@@ -24,6 +24,27 @@ This plan is based on the Lighthouse report in `casngs.com-20261003T191820.html`
 
 The report identifies the first corridor-card copy paragraph (`.cor3d-copy`) as the LCP element. The document backend response is reported as fast (50 ms in the server-response audit); the report points toward browser rendering and resource work, rather than PHP response time, as the first area to investigate. This is one Lighthouse sample, and device/network settings must be recorded on the next run before comparing scores.
 
+### Latest Report: 2026-10-04 03:23 UTC
+
+The newer `casngs.com-20261003T202344.json` report still scores Performance **0.27**. It reports FCP **3.5 s**, LCP **5.6 s**, Speed Index **9.8 s**, TBT **2,480 ms**, TTI **9.3 s**, CLS **0**, and about **16.2 s** of main-thread work. The page made 121 requests totaling about **2.41 MB**, including about **917 KB** of scripts and **681 KB** of images. Relative to the earlier supplied run, TBT and Speed Index are lower, while FCP/LCP are not improved; the main-thread totals vary substantially between runs, so treat them as observed samples, not a controlled benchmark.
+
+The LCP is still the first `.cor3d-copy` paragraph. The report identifies a forced-reflow call in `corridor-hero-engine.js` with about **772 ms** of reflow time. Its render-blocking audit estimates **1,250 ms** of savings. It attributes about **1,617 ms** of blocking to the unversioned Three.js request, about **402 ms** to the Tailwind CDN build, and about **720 ms** to GoDaddy's commerce SDK. The unused-JavaScript audit estimates **189 KiB** of savings, including the two Three.js files and Google Tag Manager.
+
+The report records both the unversioned `three.min.js` and the plugin's `three.min.js?ver=r128`, each about **121 KB**. Inspection of the current live homepage source traced the unversioned tag to a literal site-head snippet (`<!-- Three.js -->`), not to current plugin code. Remove that site-head tag and keep the plugin's registered Three.js handle as the single owner. The latest network report also shows two downloads of `assets/models/dna.glb`, each about **245 KB**; the DNA-background and corridor scenes independently create GLTFLoader instances for the same model.
+
+### Priority Queue From The Latest Evidence
+
+| Priority | Finding and ownership | Next action |
+| --- | --- | --- |
+| P0: finish Step 1 | Two Three.js r128 instances remain because a raw site-head script duplicates the plugin handle. | Remove the site's manual `<!-- Three.js -->` script include. Confirm the console warning clears and only the plugin request remains. This snippet is outside the plugin workspace. |
+| P1: Step 2 runtime | Corridor pointer interactions read geometry with `getBoundingClientRect()`; Lighthouse attributes about 772 ms forced reflow to the corridor engine. Scene setup/render work also contributes to long tasks and frame violations. | Cache geometry outside pointer handlers; gate expensive setup and animation by visibility/state; avoid per-frame layout reads/writes. Preserve the scene's scroll choreography. |
+| P1: Step 2 shared assets | The same 245 KB GLB is downloaded twice by independently initialized DNA and corridor scenes. The homepage also loads large shared engines/assets even though some features are block-specific. | Inventory current consumers, then implement safe shared fetch/parse caching or another dedupe path and conditionally enqueue feature assets without breaking blocks, shortcodes, templates, or editor behavior. |
+| P1: external site integrations | Tailwind's CDN build, Google Tag Manager, and GoDaddy commerce code account for substantial script work/render blocking but are not owned by this plugin. | Coordinate production Tailwind compilation and third-party load/consent strategy with their owners; don't dequeue them from this plugin blindly. |
+| P2: media and fonts | The WordPress uploads footer PNG is about 523 KB with an estimated 497 KiB savings; one plugin WebP is also oversized. Several Google Font requests and CSS `@import` chains remain. | Resize/convert the uploads image at its source; size plugin images appropriately; consolidate/conditionally load font declarations after runtime work. |
+| P3: maintainability | Color values, defaults, animation helpers, and rendering patterns are repeated across PHP, CSS, and JavaScript. | During Step 2, centralize only truly shared tokens/utilities and retain intentional block-specific differences. This is a maintainability goal; its direct Lighthouse benefit is not established. |
+
+The report also shows 767 DOM elements and CLS 0, so excessive DOM size/layout shift is not currently a leading bottleneck. The console's Meshopt SIMD message is a decoder capability warning, not a load exception; the missing-decoder exception is gone. Chrome `[Violation]` entries are timing warnings, not thrown errors.
+
 ### Confirmed Plugin Findings
 
 - `cas_ngs_suite_front_assets()` enqueues header/footer CSS and JavaScript, plus Google Fonts, on every frontend page. The splash markup, stylesheet, and script are also installed globally, and the splash CSS hides the rest of the body while the animation is active.
@@ -67,7 +88,7 @@ The homepage composition is understood: the site-wide header and one-time splash
 
 ### Step 1 completion gate
 
-All plugin-owned uncaught exceptions are gone, the compressed model loads in every scene that uses it, and the header does not create a second Three.js load. PHP and JavaScript syntax checks pass. The first check is manual console and visual behavior after activation; it is not a Lighthouse run.
+The plugin-owned uncaught exceptions are gone, and the compressed model loads. PHP and JavaScript syntax checks pass. The latest console has no uncaught plugin error, but Step 1 is not fully clear until the external site-head Three.js tag is removed: the newest report still sees both it and the plugin's registered library. Then confirm the duplicate-instance warning clears. This is manual console/source verification, not another Lighthouse run.
 
 ### Console items that are not exceptions
 
@@ -92,7 +113,7 @@ The homepage's header, splash, corridor, DNA background, stacking hero, and Act 
 
 ## Step 3: Lighthouse, Only When The Site Owner Is Ready
 
-After Step 2 is accepted, the site owner may run Lighthouse once and share the new report. Compare it with the supplied report (Performance 0.28, FCP 2.7 s, LCP 5.5 s, Speed Index 13.2 s, TBT 3,450 ms, CLS 0). Use the result to choose the next site-performance task; do not prescribe repeated runs or make Lighthouse a prerequisite for the work in Steps 1 and 2.
+After Step 2 is accepted, the site owner may run Lighthouse once and share the new report. Compare it with the latest report above (Performance 0.27, FCP 3.5 s, LCP 5.6 s, Speed Index 9.8 s, TBT 2,480 ms, CLS 0). Use the result to choose the next site-performance task; do not prescribe repeated runs or make Lighthouse a prerequisite for the work in Steps 1 and 2.
 
 The supplied report also identifies work outside this plugin: Tailwind's production CDN, analytics/commerce scripts, WordPress/WooCommerce/Ultimate Member assets, and the approximately 523 KB footer image from WordPress uploads. Coordinate those with their owners rather than silently dequeuing them from this plugin.
 
